@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+
+<th:block th:fragment="content">
+
+	<section class="main_home">
+		
+			<div class="view main viewBack">
+				<!-- <img alt="탈출을 위한 모든 것, 이스케이프룸" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fc3j3YL%2FbtsKc1VKcsz%2F2QFeyXa4efJN7jgP3hAPEk%2Fimg.png"> -->
+				<div class="black_box"></div>
+			</div>
+	
+			<div class="view banner_theme viewBack">
+			
+				<div class="theme_img"></div>
+				<div class="banner_text not_div">
+					<div>THEME LINUP</div>
+					<div>ESCAPE ROOM IS LIFE</div>
+					<div>스릴, 감동, 성취감!</div>
+					<div>넓은 공간에서 펼쳐지는 다양한 테마의 스토리텔링과 함께 다양한 상황을 맞닥뜨리세요!</div>
+					<div>홍대, 인천구월, 서면</div>
+				</div>
+				
+				<div class="swiper_box">
+				
+					<div class="swiper-container mySwiper img-gallery">
+						<div class="swiper-wrapper">
+							<div th:each="dto : ${themeList}" class="swiper-slide">
+								<img th:src="@{/uploadfile/{imgPath}(imgPath=${dto.imgPath})}" alt="Theme Image" class="theme-img">
+								<div class="swiper-content none">
+									<p class="theme-title">[[${dto.theme}]]</p>
+									<div class="theme-synop" rows="5" name="sysnopsis" id="sysnopsis" th:utext="${dto.sysnopsis}" required></div>
+									<div class="theme-etc">
+										<p class="theme-etc-level" th:data-level="${dto.level}">난이도 : [[${dto.level}]]</p>
+										<div>
+											<span> 제한시간 : [[${dto.limitedTime}]]분</span>
+											<span> 자물쇠/장치 비율 : [[${dto.lockRatio}]]:[[${dto.plantRatio}]]</span>
+										</div>
+										
+										<div>
+											<span> 최소~최대인원 : [[${dto.minPeople}]]</span> ~
+											<span>[[${dto.maxPeople}]]</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="navigation-wrapper">
+						<!-- 화살표 -->
+						<div class="swiper-button-prev"></div>
+						<div class="swiper-button-next"></div>
+					</div>
+					
+					<!-- Swiper JS -->
+					<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+					
+				</div>
+			
+			</div>
+			
+			<div class="view banner_reservation viewBack">
+	
+				<!-- 홍율 예약하기 버튼 클릭시 http://localhost:8080/reservation/list 으로 이동하기 만들기 중요한거 아님! 후에 넣어도 됨 -->
+				<div class="reservation_link">
+					<form id="reservation-form" method="get" th:action="@{/reservation}" class="re_sel">
+						<div class="banner_text">
+							<div>예약하기</div>
+							<div>RESERVATION</div>
+						</div>
+		
+						<div class="form-group btn_style">
+							<span>인당 22000원, 60분 구성(테마별 상이), 현장 특별 할인 이벤트 진행 중</span>
+							<table class="t_event">
+								<tbody>
+									<tr class="tr_event" th:each="list : ${list}">
+										<td>[[${list.spot}]]</td>
+										<td>[[${list.title}]]</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="button-container-3">
+								<a href="/reservation/list">
+									<button type="button" name="Hover"  class="search_btn">예약하러가기</button>
+								</a>
+							</div>
+						</div>
+		
+					</form>
+				</div>
+			</div>
+				
+			<div class="view banner_side viewBack">
+	
+
+				<div class="banner_text">
+					<div>어디서나 즐길 수 없는 이야기</div>
+					<div>I REALLY LIKE THIS</div>
+					<div>조마조마하게 조여드는 타임어택의 스릴</div>
+					<div>몰입하면 몰입할수록 즐거운, 스토리의 한 인물로서 등장</div>
+					<div>“자, 이 수수께끼를 풀 수 있겠나? 셜록.”</div>
+				</div>
+
+				<div style="margin-top: 40px;">
+					<iframe id="youtube-video" width="1050" height="500" src="https://www.youtube.com/embed/QLDKF89fOqI?enablejsapi=1&mute=1" title="[홍보영상] 방탈출 강남 비트포비아 던전 홍보영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+	
+			</div>
+	
+			<div class="view banner_notice viewBack">
+				
+				<div class="mini_text">
+					<div>NOTICE</div>
+					<div>주의사항</div>
+				</div>
+				
+				<table>
+					<tbody>
+						<tr>
+							<th><img src="/images/notion-01.svg" alt="10분 전 도착"></th>
+							<th><img src="/images/notion-02.svg" alt="스포일러 금지"></th>
+							<th><img src="/images/notion-03.svg" alt="사진 촬영 금지"></th>
+							<th><img src="/images/notion-04.svg" alt="위험물품 반입 금지"></th>
+						</tr>
+						<tr class="notion_text">
+							<td>10분 전 도착</td>
+							<td>스포일러 금지</td>
+							<td>사진 촬영 금지</td>
+							<td>위험물품 반입 금지</td>
+						</tr>
+						<tr class="many_text">
+							<td>원활한 사전 안내를 위해 예약 시간보다 10분 일찍 도착해주세요. 늦으시는 경우 그만큼 게임시간이 줄어듭니다.</td>
+							<td>아직 체험하지 않은 분들을 위해 게임룸 외부에서의 문제 및 스토리 스포일러는 참아주세요.</td>
+							<td>컨텐츠 보호를 위해 사진 촬영은 금지되어 있으니, 휴대폰, 태블릿 등 전자기기는 모두 보관해주세요</td>
+							<td>고객님의 안전을 위해 CCTV 및 인터폰, 무전기가 설치되어 있습니다. 위험물건은 게임룸 안으로 반입이 금지됩니다.</td>
+						</tr>
+					</tbody>
+				</table>
+	
+			</div>
+	
+		</section>
+	
+	<script th:inline="javascript">
+	
+		//HTML 문서가 로드될 때 이벤트 처리	
+		$(document).ready(function() {
+			//컨트롤러에서 전달한 메세지 저장
+			let msg = [[${msg}]];
+			
+			if(msg!=null) {
+				alert(msg); // 메시지 팝업
+			}
+		});
+
+		// 갤러리 펼치기 + 슬라이드쇼
+		const swiper = new Swiper('.swiper-container', {
+			loop: true,
+			centeredSlides: true,
+			slidesPerView: 'auto',
+			slideToClickedSlide: true,
+			effect: 'coverflow',
+			coverflowEffect: {
+				rotate: 30,
+				slideShadows: false,
+			},
+			autoplay: {
+				delay: 2500,
+				disableOnInteraction: false,
+			},
+			// Navigation arrows
+			navigation: {
+				nextEl: ".swiper_box .swiper-button-next",
+				prevEl: ".swiper_box .swiper-button-prev"
+			}
+		});
+		
+		//난이도 별로 변경
+			$(document).ready(function() {
+					// 모든 난이도 요소를 선택
+					$('.theme-etc-level').each(function() {
+							// data-level 속성에서 난이도 값을 가져옴
+							const level = parseInt($(this).attr('data-level'), 10);
+							
+							if (!isNaN(level)) {
+									// 난이도 숫자만큼 별 추가
+									let stars = '';
+									for (let i = 0; i < level; i++) {
+											stars += '⭐';
+									}
+									
+									// 난이도 텍스트를 별로 변환
+									$(this).text(`난이도 : ${stars}`);
+							}
+					});
+			});
+
+		//슬라이드 hover 효과
+		$('.swiper-slide > img').on('mouseenter', function() {
+		const $prevSlide = $(this).parent().prev('.swiper-slide'); // 이전 .swiper-slide 요소 선택
+		if ($prevSlide.length) {
+			$prevSlide.addClass('fade');
+		}
+		
+		// swiper-content는 현재 슬라이드에서 표시
+		const $currentSlide = $(this).parent();
+		const $content = $currentSlide.find('.swiper-content');
+		if ($content.length) {
+			$content.css('display', 'flex');
+		}
+		
+		// mouseleave 이벤트를 추가하여 fade 효과 및 content 숨기기
+		$currentSlide.on('mouseleave', function() {
+			if ($prevSlide.length) {
+				$prevSlide.removeClass('fade');
+			}
+			if ($content.length) {
+					$content.css('display', 'none');
+				}
+			});
+		});
+
+		let selectedPoint = '';
+	
+		function selectPoint(button) {
+			// 선택된 지점을 업데이트
+			selectedPoint = button.value;
+	
+			// 선택된 버튼 강조
+			const buttons = document.querySelectorAll('#point_selection input');
+			buttons.forEach(btn => btn.classList.remove('selected'));
+			button.classList.add('selected');
+		}
+	
+		function setReservation() {
+			// 선택한 지점을 hidden input에 설정
+			document.getElementById('selectedPoint').value = selectedPoint;
+	
+			// 폼 제출
+			if (selectedPoint) {
+				document.getElementById('reservation-form').submit();
+			} else {
+				alert('지점을 선택해주세요.');
+			}
+		}
+		
+		let lastScrollY = window.scrollY;  // 마지막 스크롤 위치 저장
+
+		window.addEventListener('scroll', function () {
+			const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+			const currentScrollY = window.scrollY; // 현재 스크롤 위치
+
+			// 스크롤 방향 확인 (아래로 스크롤 중인지 확인)
+			const isScrollingDown = currentScrollY > lastScrollY;
+
+			// 1/3 정도 보일 때 자동 스크롤이 되도록 하는 함수
+			function autoScrollToElement(element) {
+				const elementRect = element.getBoundingClientRect();
+				if (isScrollingDown && elementRect.top < windowHeight * 2 / 3 && elementRect.top > 0) {
+					window.scrollTo({
+						top: window.scrollY + elementRect.top,
+						behavior: 'smooth'
+					});
+				}
+			}
+
+			// banner_theme, banner_reservation, banner_side, banner_notice에 대해 각각 처리
+			const sections = document.querySelectorAll('.view.banner_theme, .view.banner_reservation, .view.banner_side, .view.banner_notice');
+			sections.forEach(section => autoScrollToElement(section));
+
+			// 마지막 스크롤 위치 업데이트
+			lastScrollY = currentScrollY;
+		});
+		
+		// YouTube Iframe API 로드
+		let tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+		let firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		let player;
+
+		// YouTube 플레이어 초기화
+		function onYouTubeIframeAPIReady() {
+			player = new YT.Player('youtube-video', {
+				events: {
+					'onReady': onPlayerReady
+				}
+			});
+		}
+
+		function onPlayerReady(event) {
+			// 스크롤 이벤트 감지
+			window.addEventListener('scroll', function() {
+				let videoElement = document.getElementById('youtube-video');
+				let rect = videoElement.getBoundingClientRect();
+
+				// 비디오가 뷰포트에 들어왔을 때 재생, 나갔을 때 일시정지
+				if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+					player.playVideo();
+				} else {
+					player.pauseVideo();
+				}
+			});
+		}
+
+	</script>
+
+
+</th:block>
+
+</th:block>
+
+</html>

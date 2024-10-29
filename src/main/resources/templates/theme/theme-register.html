@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}">
+<th:block th:fragment="content">
+
+<div class="content-header">
+	<div class="cormorant-font">Theme Register</div>
+	<p class="p_text_deco">새 테마 등록</p>
+</div>
+
+
+<!-- DTO에 데이터가 수집되므로 각 입력필드에 알맞은 name 지정 -->
+	<form th:action="@{/theme/theme-register}" method="post" enctype="multipart/form-data" id="themeForm">
+	  <div class="theme form-group">
+	    <label>테마명</label>
+	    <input type="text" class="form-control" name="theme" id="themeName" required>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>첨부파일</label>
+	    <input type="file" class="form-control" name="uploadFile" id="uploadFile" accept="image/*" required>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <img id="imagePreview" style="max-width: 200px; margin-top: 10px; display: none;">
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>지점이름</label>
+	    <select class="form-control" name="spotName" id="spotName" required>
+	      <option value="">지점을 선택하세요</option>
+	      <option>홍대</option>
+	      <option>인천구월</option>
+	      <option>서면</option>
+	    </select>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>장르</label>
+	    <select class="form-control" name="genre" id="genre" required>
+	      <option value="">장르를 선택하세요</option>
+	      <option>추리/미션</option>
+	      <option>코믹</option>
+	      <option>드라마</option>
+	      <option>공포/스릴러</option>
+	      <option>감성/판타지</option>
+	      <option>어드벤쳐</option>
+	    </select>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>난이도</label>
+	    <select class="form-control" name="level" id="level" required>
+	      <option value="">난이도를 선택하세요</option>
+	      <option>1</option>
+	      <option>2</option>
+	      <option>3</option>
+	      <option>4</option>
+	      <option>5</option>
+	    </select>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>제한시간 (분)</label>
+	    <input type="number" class="form-control" name="limitedTime" id="limitedTime" min="1" required>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>인원 (최소-최대)</label>
+	     <div class="d-flex justy-between">
+	    <input type="number" class="form-control" name="minPeople" id="minPeople" min="1" required style="width:50%;">
+	    <input type="number" class="form-control" name="maxPeople" id="maxPeople" min="1" required style="width:calc(50% - 20px)">
+	    </div>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>자물쇠&장치 비율</label>
+	   	<div class="d-flex justy-between">
+	    <input type="number" class="form-control" name="lockRatio" id="lockRatio" min="0" max="100" required style="width:50%;">
+	    <input type="number" class="form-control" name="plantRatio" id="plantRatio" min="0" max="100" required style="width:calc(50% - 20px)">
+   	    </div>
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>예약가능시간</label>
+	   	<input type="text" class="form-control" name="reservationTimes" required placeholder="예: 1030, 1230 ">
+	  </div>
+	  
+	  <div class="theme form-group">
+	    <label>시놉시스</label>
+	    <textarea class="form-control" rows="5" name="sysnopsis" id="sysnopsis" required placeholder="**<br>을 사용하여 개행가능** 예: 안녕하세요<br> 이스케이프룸입니다."></textarea>
+	  </div>
+	
+	  <button type="submit" class="btn btn-primary" style="margin:20px 0">등록</button>
+	</form>
+
+  <script th:inline="javascript">
+	  $(document).ready(function() {
+	    $('#uploadFile').change(function() {
+	      const file = this.files[0];
+	      if (file) {
+	        const reader = new FileReader();
+	        reader.onload = function(e) {
+	          $('#imagePreview').attr('src', e.target.result).show();
+	        }
+	        reader.readAsDataURL(file);
+	      }
+	    });
+
+	    $('#themeForm').submit(function(event) {
+	      event.preventDefault(); // 기본 제출 동작 방지
+	      
+	      const themeName = $('#themeName').val().trim();
+	      const limitedTime = $('#limitedTime').val();
+	      const minPeople = parseInt($('#minPeople').val());
+	      const maxPeople = parseInt($('#maxPeople').val());
+	      const lockRatio = parseInt($('#lockRatio').val());
+	      const plantRatio = parseInt($('#plantRatio').val());
+	      const reservationTimes = $("#themeForm").find("input[name='reservationTimes']").val().trim();
+			
+	      //유효성 검증
+	      if (!themeName) {
+	        alert('테마명을 입력해 주세요.');
+	        return false;
+	      }
+
+	      if (minPeople > maxPeople) {
+	        alert('최소 인원은 최대 인원보다 클 수 없습니다.');
+	        return false;
+	      }
+
+	      if (lockRatio + plantRatio !== 100) {
+	        alert('자물쇠와 장치의 비율 합이 100이 되어야 합니다.');
+	        return false;
+	      }
+	      
+          if (reservationTimes === "") {
+	         alert("예약 가능한 시간을 입력해 주세요.");
+	         return false;
+	      }
+	
+	      // 예약 가능 시간 형식 검증: 예: 10:30, 12:30
+	      const timePattern = /^(\d{1,2}\d{2})(\s*,\s*\d{1,2}\d{2})*$/;
+	      if (!timePattern.test(reservationTimes)) {
+	          alert("올바른 형식의 예약 가능한 시간을 입력하세요. 예: 1030, 1230, 1430");
+	          return false;
+	      }
+
+	  	// 중복 테마명 확인을 위한 AJAX 요청
+	        $.get(`/theme/check?theme=${themeName}`, 
+	        function(exists) {
+	            if (exists) {
+	                alert('이미 존재하는 테마명입니다.');
+	                $('#themeName').val('').focus(); // 입력 필드를 비우고 포커스
+	            } else {
+	                // 중복이 아닐 경우 폼 제출
+	                $('#themeForm').off('submit').submit(); // 이벤트 해제 후 폼 제출
+	            }
+	        });
+	    });
+	  });
+  </script>
+</th:block>
+
+</th:block>

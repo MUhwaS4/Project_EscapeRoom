@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+
+<th:block th:fragment="content">
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+
+	<section class="member_read">
+		<div class="view member_data_read memberBack readBack">
+		
+			<video class="video-background-member" autoplay muted loop>
+				<source src="/images/pattMov.mp4" type="video/mp4">
+			</video>
+			<div class="member_page_box">
+				<div class="member_data_sign">
+					<div class="member_data">
+						<div class="sign_title">
+							<div>MY PAGE</div>
+							<button type="button" onclick="modifyChange(this)" class="modify_display">정보 수정</button>
+							<button type="button" id="postBtn" class="hide_box modifyBtn notuseBtn noClickBtn" onclick="validateForm()">저장하기</button>
+						</div>
+						<div class="sign_text">
+							<div>마이페이지</div>
+						</div>
+						<div class="mydata_list">
+							<form action="/mypage" method="post">
+								<div class="name_container flex_css">
+									<label for="name" class="list_text">이름</label>
+									<input type="text" class="form-control" name="name" id="name" th:value="${member.name}" readonly>
+								</div>
+								<div class="id_container flex_css hide_on">
+									<label for="id" class="list_text">아이디</label>
+									<input class="form-control" type="text" name="id" id="id" th:value="${member.id}" readonly>
+								</div>
+								<div class="pw_container flex_css">
+									<label for="password" id="pwLabel" class="list_text">비밀번호</label>
+									<input class="form-control" type="password" name="password" id="password" th:value="${member.password}" onblur="checkPasswordMatch()" readonly>
+								</div>
+								<div class="hide_box pwPre_container flex_css">
+									<label for="pwPrevious" id="pwPreLabel" class="list_text">기존 비밀번호</label>
+									<input class="form-control" type="password" id="pwPrevious" onblur="checkPasswordMatch()">
+									<input type="hidden" id="pwSameCk" th:value="${member.password}">
+								</div>
+								<div class="hide_box pwPreOk_container flex_css hide_on pwPre_onoff noLabel">
+									<span class="width_box"></span>
+									<div class="pwSameCk add_text"></div>
+								</div>
+								<div class="pwOk_container flex_css noLabel hide_box">
+									<span class="width_box"></span>
+									<span class="how_text">최소 8자 이상, 숫자, 대소문자, 특수문자를 조합하여 작성해주세요.</span>
+								</div>
+								<div class="hide_box pwCk_container flex_css">
+									<label for="passwordCk" class="list_text">비밀번호 확인</label>
+									<input class="form-control" type="password" id="passwordCk" onblur="checkPasswordMatch()" value="">
+								</div>
+								<div class="hide_box pwCk_container flex_css hide_on pw_onoff noLabel">
+									<span class="width_box"></span>
+									<div class="pwMessage add_text"></div>
+								</div>
+								<div class="birthday_container flex_css">
+									<label for="birthday" class="list_text">생년월일</label>
+									<input class="form-control" type="number" name="birthday" id="birthday" th:value="${member.birthday}" readonly>
+								</div>
+								<div class="phone_container flex_css">
+									<label for="phone" class="list_text">연락처</label>
+									<input class="form-control" type="text" name="phone" id="phone" th:value="${member.phone}" readonly>
+								</div>
+								<div class="phone_container flex_css ck_box">
+									<label for="phoneCk" class="list_text">SMS 수신 여부</label>
+									<input type="checkbox" name="phoneCk" value="동의" onClick="return false" th:checked="${member.phoneCk != null and member.phoneCk.equals('동의')}">
+									<span class="sms_text">[브랜드명]에서 제공하는 소식을 SMS로 받으실 수 있습니다.</span>
+									<!-- dto 불러올 때 데이터 null이 아니면 checked 추가 -->
+								</div>
+								<div class="email_container flex_css">
+									<label for="email" class="list_text">이메일</label>
+									<input class="form-control" type="text" name="email" id="email" th:value="${member.email}" readonly>
+								</div>
+								<div class="email_container flex_css ck_box">
+									<label for="emailCk" class="list_text">이메일 수신 여부</label>
+									<input type="checkbox" name="emailCk" value="동의" onClick="return false" th:checked="${member.emailCk != null and member.emailCk.equals('동의')}">
+									<span class="sms_text">이스케이프룸에서 제공하는 소식을 이메일로 받으실 수 있습니다.</span>
+								</div>
+							</form>
+						</div>
+					</div>
+	
+					<div class="reservation_data">
+						<div class="mypage_title">MY RESERVATION</div>	
+						<div class="sign_text">		
+							<div>예약 정보 확인</div>
+						</div>
+						<div class="mydata_list">
+							<table>
+								<thead>
+									<tr>
+										<th>테마</th>
+										<th>지점</th>
+										<th>예약 일자</th>
+										<th>예약 시간</th>
+										<th>인원</th>
+									</tr>
+								</thead>
+								<tbody>								
+									<!-- list 중에서 memberId가 dto.id와 동일한 것만 출력 -->
+									<tr th:each="reservation : ${list}" th:if="${reservation.memberId} == ${member.id}" class="list_mes_Ck">
+										<td th:text="${reservation.theme}"></td>
+										<td th:text="${reservation.spot}"></td>
+										<td th:text="${#temporals.format(reservation.reservationDate, 'yy.MM.dd')}"></td>
+										<td th:text="|${#strings.substring(reservation.reservationTime, 0, 2)}:${#strings.substring(reservation.reservationTime, 2)}|"></td>
+										<td th:text="${reservation.people}"></td>
+									</tr>
+									
+									<tr class="list_mes_text hide_on">
+										<td colspan="5">
+											<div>예약이 없습니다.</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+				<div class="remove-area">
+					<button type="button" class="removeBtn">탈퇴하기</button>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<script>
+
+		// CSS 선택자로 form 태그 가져오기
+		let form = $("form");
+
+		function modifyChange(button) {
+
+			// 수정 버튼 클릭 시 숨겨진 클래스 공개
+			
+			// hide_box 클래스를 가진 모든 요소를 선택 (NodeList 반환)
+			let boxChange = document.querySelectorAll('.hide_box');
+
+			// 각 요소에 대해 클래스 변경
+			boxChange.forEach(function(box) {
+				box.classList.remove('hide_box'); // hide_box 클래스 제거
+				box.classList.add('modify_box'); // modify_box 클래스 추가
+			});
+
+			// 비밀번호 변경 필드 수정
+
+			// 비밀번호 DIV 필드 호출
+			let pwBox = document.querySelector(".pw_container");
+			let pwPreBox = document.querySelector(".pwPreOk_container");
+			let pwCkBox = document.querySelector(".pwCk_container");
+
+			// 부모 요소 선택
+			let parent = pwBox.parentNode;
+
+			// 비밀번호 필드를 비밀번호 변경 필드 아래로 이동
+			parent.insertBefore(pwBox, pwPreBox.nextSibling);
+
+			// 비밀번호 관련, 이메일, 연락처, 체크박스 호출
+			let pw = document.getElementById("password");
+			let pwPre = document.getElementById("pwPrevious");
+			let pwCk = document.getElementById("passwordCk");
+
+			let phone = document.getElementById("phone");
+			let email = document.getElementById("email");
+
+			let phoneCk = document.querySelector('input[name="phoneCk"]');
+			let emailCk = document.querySelector('input[name="emailCk"]');
+
+			// 비밀번호 입력 필드 문구 수정, text 리셋
+			let pwLabel = document.getElementById("pwLabel");
+
+			pw.value = "";
+			pwLabel.textContent = "비밀번호 변경";
+
+			let pwPreLabel = document.getElementById("pwPreLabel");
+
+			// 수정 가능한 필드 readouly, oncilck 속성 삭제
+			// 비밀번호, 연락처, 이메일, 수신 여부
+
+			pw.removeAttribute("readonly");
+			pwPre.removeAttribute("readonly");
+			pwCk.removeAttribute("readonly");
+
+			phone.removeAttribute("readonly");
+			email.removeAttribute("readonly");
+
+			phoneCk.removeAttribute("onClick");
+			emailCk.removeAttribute("onClick");
+			
+			// 수정 버튼 숨기기
+			button.classList.add("hide_box")
+
+			button.disabled = true;
+			
+		}
+
+		function modityFinish() {			
+
+			let pwPre = document.getElementById("pwPrevious");
+			let pwCk = document.getElementById("passwordCk");
+
+			// ID가 유효한지 확인 후 초기화
+			if (pwPre) {
+				pwPre.value = ''; // pwPre 초기화
+			} else {
+				console.log("pwPrevious not found");
+			}
+
+			if (pwCk) {
+				pwCk.value = ''; // pwCk 초기화
+			} else {
+				console.log("passwordCk not found");
+			}
+			
+			// modify_box 클래스를 가진 모든 요소를 선택 (NodeList 반환)
+			let boxChange = document.querySelectorAll('.modify_box');
+
+			// 각 요소에 대해 클래스 변경
+			boxChange.forEach(function(box) {
+				box.classList.add('hide_box'); // hide_box 클래스 추가
+				box.classList.remove('modify_box'); // modify_box 클래스 제거
+			});
+
+			// 비밀번호 DIV 필드 호출
+			let pwBox = document.querySelector(".pw_container");
+			let pwPreBox = document.querySelector(".pwPre_container");
+			let pwCkBox = document.querySelector(".pwCk_container");
+
+			// 부모 요소 선택
+			let parent = pwBox.parentNode;
+
+			// 비밀번호 필드를 비밀번호 변경 필드 위로 이동
+			parent.insertBefore(pwPreBox, pwBox.nextSibling);
+
+			let modDis = document.querySelector(".modify_display");
+			let modBtn = document.querySelector(".modifyBtn");
+
+			// 정보 수정 버튼 다시 만들기
+			modDis.classList.remove("hide_box");
+			modBtn.classList.add("hide_box");
+
+		}
+		
+		function checkPasswordMatch() {
+
+			// 비밀번호와 비밀번호 체크 호출
+			let pw = document.getElementById("password").value;
+			let pwPre = document.getElementById("pwPrevious").value;
+			let pwCk = document.getElementById("passwordCk").value;
+			let pwSameCk = document.getElementById("pwSameCk").value;
+
+			// 기존 비밀번호 동일 확인
+			let sameMessage = document.querySelector(".pwSameCk");
+			
+			// 변경 비밀번호 확인
+			let message = document.querySelector(".pwMessage");
+
+			// 정규표현식 확인
+			let pwErrorMessage = document.querySelector("pwError");
+
+			let pwPreOnBox = document.querySelector(".pwPre_onoff");
+			let pwOnBox = document.querySelector(".pw_onoff");
+
+			if (pwPre) {
+				pwPreOnBox.classList.remove("hide_on");
+			}
+
+			if (pwCk) {
+				pwOnBox.classList.remove("hide_on");
+			}
+			
+			let btn = document.getElementById("postBtn");
+			
+			const saltRounds = 10;
+			
+			let bcrypt = dcodeIO.bcrypt;
+			
+			// 기존 비밀번호를 체크
+			bcrypt.compare(pwPre, pwSameCk, function(err, result) {
+				if (err) {
+					console.error(err);
+					return;
+				}
+
+				if (!result) {
+					sameMessage.textContent = "기존 비밀번호와 일치하지 않습니다.";
+					btn.classList.add('noClickBtn');
+				} else {
+					sameMessage.textContent = "";
+					// 기존 비밀번호가 일치할 때만 hide_on 클래스 추가
+					btn.classList.remove('noClickBtn');
+					pwPreOnBox.classList.add("hide_on");
+
+					// 비밀번호가 일치하지 않을 경우
+					if (pw !== pwCk) {
+						message.textContent = "비밀번호가 일치하지 않습니다.";
+					} else {
+						message.textContent = "비밀번호가 일치합니다.";
+						message.classList.add('useTestOk');
+					}
+
+					// 기존 비밀번호와 변경 비밀번호가 동일할 경우
+					if (pwPre === pw && pw === pwCk) {
+						message.textContent = "기존 비밀번호와 다른 비밀번호를 설정해주세요.";
+					}
+				}
+			});
+
+		}
+
+		// 필수 입력값이 채워져야만 정보 수정 가능
+		function validateForm() {
+			
+			let pw = document.getElementById("password").value;
+			let pwPre = document.getElementById("pwPrevious").value;
+			let pwCk = document.getElementById("passwordCk").value;
+			let pwSameCk = document.getElementById("pwSameCk").value;
+			let pwMessage = document.querySelector(".pwMessage");
+			let phone = document.getElementById("phone").value;
+			let email = document.getElementById("email").value;
+
+			let btn = document.getElementById("postBtn");
+
+			if (!pw) {
+				alert("비밀번호를 입력하세요.");
+				return false;
+			}
+
+			// 비밀번호 정규 표현식 체크
+			const pwPatt = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+			if (!pwPatt.test(pw)) {
+				alert("비밀번호는 최소 8자 이상, 숫자, 대소문자, 특수문자 1개 이상 포함해야 합니다.");
+				return false;
+			}
+
+			if (!pwCk || pw && !pwMessage.classList.contains('useTestOk') || pw != pwCk) {
+				alert("비밀번호를 재확인해주세요.");
+				return false;
+			}
+
+			if (!pwMessage.classList.contains('useTestOk')) {
+				alert("비밀번호가 일치하지 않습니다.");
+				return false;
+			}
+
+			if (!phone) {
+				alert("연락처를 입력해주세요.");
+				return false;
+			}
+
+			// 연락처 정규표현식 체크: 000-0000-0000 형식
+			const phonePatt = /^\d{3}-\d{4}-\d{4}$/;
+
+			if (!phonePatt.test(phone)) {
+				alert("연락처 형식이 올바르지 않습니다. 000-0000-0000 형식으로 입력해주세요.");
+				return false;
+			}
+
+			if (email) {
+
+				// 이메일 정규표현식 체크
+				const emailPatt = /^([a-zA-Z]+\d*)+(\.?\w+)+@\w+(\.\w{2,3})+$/;
+
+				if (!emailPatt.test(email)) {
+					alert("이메일을 올바르게 입력해주세요.");
+					return false;
+				}
+
+			}
+
+			modityFinish();
+
+			let button = document.querySelector(".modify_display");
+
+			button.disabled = false;
+
+		}
+		
+		$(".modifyBtn").click(
+			function() {
+				
+				if (!confirm("수정하시겠습니까?")) {
+					return;
+				}
+				
+				// 폼 데이터 확인
+					console.log(form.serialize()); // 전송할 데이터 확인
+			
+				form
+					.attr("action", "/mypage")
+					.attr("method", "post")
+					.submit();
+				
+			}
+		);
+		
+		$(".removeBtn").click(
+			function() {
+				
+				let pwPre = document.getElementById("pwPrevious").value;
+				let pwCk = document.getElementById("passwordCk").value;
+
+				// confirm: 탈퇴 여부를 확인하는 창
+				// 아니오를 클릭하면 함수 종료
+				if (!confirm("탈퇴하시겠습니까?")) {
+					return;
+				}
+			
+				form
+					.attr("action", "/member/remove")
+					.attr("method", "post")
+					.submit();
+				
+				/* $.post("/member/remove", { id: userId }, function(response) {
+							// 응답에 따라 UI 업데이트 또는 메시지 표시
+					}); */
+				
+			}
+		);
+
+		document.addEventListener("DOMContentLoaded", function() {
+			// list_mes_Ck 클래스를 가진 tr 요소를 선택
+			const reservationRows = document.querySelectorAll('.list_mes_Ck');
+
+			// reservationRows가 비어있다면
+			if (reservationRows.length === 0) {
+				// list_mes_text 클래스의 hide_box를 제거
+				const noReservationRow = document.querySelector('.list_mes_text');
+				if (noReservationRow) {
+					noReservationRow.classList.remove('hide_on');
+				}
+			}
+		});
+		
+		// 필수 입력값이 입력되면 버튼 디자인 변경(클래스 추가)
+		document.addEventListener("DOMContentLoaded", function() {
+			
+			let pw = document.getElementById("password");
+			let pwPre = document.getElementById("pwPrevious");
+			let pwCk = document.getElementById("passwordCk");
+			let phone = document.getElementById("phone");
+		
+			const btn = document.getElementById("postBtn");
+
+			function checkFields() {
+
+				// 모든 필드가 비어 있지 않으면 버튼에 useBtn 클래스 추가
+				if (pw.value && pwPre.value && pwCk.value && pw.value === pwCk.value) {
+					btn.classList.add("useBtn");
+					btn.classList.remove("notuseBtn");
+					btn.disabled = false; // 버튼 활성화
+					
+				} else {
+					btn.classList.add("notuseBtn");
+					btn.classList.remove("useBtn");
+					btn.disabled = true; // 버튼 비활성화
+				}
+
+				console.log("Button disabled state:", btn.disabled); // 디버깅용
+
+			}
+
+			// 입력 필드마다 이벤트 리스너 추가
+			pw.addEventListener("input", checkFields);
+			pwPre.addEventListener("input", checkFields);
+			pwCk.addEventListener("input", checkFields);
+			phone.addEventListener("input", checkFields);
+			
+		});
+
+	</script>
+
+</th:block>
+
+</th:block>
+
+</html>

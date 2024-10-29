@@ -1,0 +1,170 @@
+@charset "UTF-8";
+
+.hide_box {
+	display: none;	
+}
+
+.hide_on {
+	display: none;	
+}
+
+section > div.view.readBack {
+	width: 100%;
+	height: auto;
+	padding: 100px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.member_page_box {
+	position: relative;
+	width: 100%;
+	max-width: 760px;
+	margin: 0 auto;
+	top: 0;
+}
+
+.member_data_sign {
+	width: 100%;
+	max-width: 700px;
+	height: auto;
+	background-color: #7e7e7e61;
+	padding: 30px 30px 0px 30px;
+	border-radius: 10px;
+	box-shadow: 3px 3px 0px #535353;
+}
+
+.member_data, .reservation_data {
+	width: 100%;
+	max-width: 800px;
+	height: auto;
+	padding: 10px 0 50px;
+}
+
+.member_data .sign_title {
+	display: flex;
+	justify-content: space-between;
+}
+
+.member_data input {
+	color: #fff;
+}
+
+.member_data_sign .member_data input  {
+	max-width: none;
+}
+
+.mypage_title {
+	font-size: 36px;
+	font-family: "Cormorant", serif;
+	font-optical-sizing: auto;
+	font-weight: 700;
+	font-style: normal;
+	letter-spacing: -4.5px;
+	text-align: left;
+}
+
+.mypage_text {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 12px;
+	letter-spacing: 10.0px;
+}
+
+.mypage_text div {
+	letter-spacing: 5.0px;
+}
+
+.mydata_list {
+    text-align: left;
+}
+
+.mydata_list .list_text {
+	display: inline-block;
+	width: 120px;
+	font-size: 14px;
+}
+
+.ck_box > input[type="checkbox"] {
+    margin-left: -18px;
+}
+
+.mydata_list table {
+	width: 100%;
+	margin-top: 10px;
+}
+
+.mydata_list table thead th {
+	text-align: center;
+	font-weight: bold;
+	background-color: #333;
+	padding: 5px 0;
+	font-size: 14px;
+}
+
+.mydata_list table tbody td {
+	text-align: center;
+	padding: 5px 0;
+}
+
+.mydata_list table thead th:nth-child(1),
+.mydata_list table tbody td:nth-child(1) {
+	width: 52%;
+}
+
+.mydata_list table thead th:nth-child(2),
+.mydata_list table tbody td:nth-child(2) {
+	width: 12%;
+}
+
+.mydata_list table thead th:nth-child(3),
+.mydata_list table tbody td:nth-child(3) {
+	width: 12%;
+}
+
+.mydata_list table thead th:nth-child(4),
+.mydata_list table tbody td:nth-child(4) {
+	width: 12%;
+}
+
+.mydata_list table thead th:nth-child(5),
+.mydata_list table tbody td:nth-child(5) {
+	width: 12%;
+}
+
+.mydata_list table tbody td:first-child {
+	text-align: left;
+	padding: 10px;
+}
+
+.mydata_list table tbody td:nth-child(3),
+.mydata_list table tbody td:nth-child(4),
+.mydata_list table tbody td:nth-child(5) {
+	letter-spacing: -1px;
+}
+
+.list_mes_Ck {
+	border-bottom: 1px solid #818181;
+	font-size: 14px;
+}
+
+.list_mes_text > td > div {
+	text-align: center;
+	padding: 40px 0 0;
+}
+
+.remove-area {
+	margin-top: 40px;
+	width: 100%;
+	max-width: 760px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+/* 버튼 클릭 불가용 class 추가 */
+.noClickBtn {
+	pointer-events: none;
+}

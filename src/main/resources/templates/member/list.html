@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{layout/basic :: setContent(~{this::content})}">
+<th:block th:fragment="content">
+
+	<section class="member_list">
+	
+		<div class="view mem_list">
+			
+				<div>
+					<!-- [[${list}]] -->
+					<div class="sign_title">Member&nbsp;&nbsp;List</div>
+					<div class="sign_text">회원목록</div>
+					<table class="list-table mem_list_css">
+						<thead>
+							<tr>
+								<th>아이디</th>
+								<th>이름</th>
+								<th>연락처</th>
+								<th>SMS 수신</th>
+								<th>이메일</th>
+								<th>이메일 수신</th>
+								<th>가입일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="dto : ${list}">
+								<td>
+									<a th:href="@{/mypage(id = ${dto.id})}">
+									[[${dto.id}]]
+									</a>
+								</td>
+								<td>[[${dto.name}]]</td>
+								<td>[[${dto.phone}]]</td>
+								<td>[[${dto.phoneCk}]]</td>
+								<td>[[${dto.email}]]</td>
+								<td>[[${dto.emailCk}]]</td>
+								<td>[[${#temporals.format(dto.regDate, 'yy.MM.dd')}]]</td>
+							<tr>
+						</tbody>
+					</table>
+								
+					<!-- 페이지 번호 목록 -->
+					<ul class="pagenation">
+						<li th:class=" 'page-item ' + ${(list.number + 1) == page?'active':''} " th:each="page: ${#numbers.sequence(1, list.totalPages)}">
+							<a class="page-link" th:href="@{/member/list(page = ${page})}">
+								[[${page}]]
+							</a>
+						</li>
+					</ul>
+				</div>
+		
+		</div>
+	
+	</section>
+
+</th:block>
+</th:block>
+
+</html>

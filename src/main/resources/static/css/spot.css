@@ -1,0 +1,107 @@
+@charset "UTF-8";
+
+.location-info {
+	width:100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.location {
+	display: flex;
+	flex-direction: column;
+
+}
+
+.location + .location {
+	margin: 40px 0;
+}
+
+.location-img {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom : 40px;
+}
+
+.location-img img {
+	height: 400px;
+}
+
+.spot-title {
+	font-size: 24px;
+	font-weight: bold;
+	margin: 20px 0;
+}
+
+.location-map {
+	width: 100%;
+	height: 380px;
+	border: 1px solid #eee;
+}
+ 
+.location-details {
+	width: 100%;
+	margin: 20px 0;
+}
+
+.location-details table {
+	width: 100%;
+	font-size: 18px;
+	border-top: 2px solid #eee;
+	border-bottom: 2px solid #eee;
+}
+
+.location-details table td {
+	padding: 10px;
+	border-top: 1px solid #eee;
+}
+
+.location-details table td:first-child {
+	background-color: #333;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.location-details table td:nth-child(2) {
+	font-size: 14px;
+	letter-spacing: -1px;
+}
+
+.customoverlay {
+	position:relative;
+	width: 80px;
+	bottom:55px;
+	border-radius:6px;
+	border: 1px solid #ccc;
+	border-bottom:2px solid #ddd;
+}
+
+.customoverlay:nth-of-type(n) {
+	border:0; 
+	box-shadow:0px 1px 2px #888;
+}
+
+.customoverlay .title {
+	display:block;
+	width: 80px;
+	text-align:center;
+	background-color:#000;
+	padding:10px 0px;
+	font-size:14px;
+	font-weight:bold;
+	border-radius: 5px;
+}
+
+.customoverlay:after {
+	 content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* 부모의 가로 중앙 정렬 */
+    bottom: -10px; /* 부모 요소 아래쪽에 배치 */
+    width: 20px;
+    height: 20px;
+    background-color: #000; /* 삼각형 배경색 */
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+}

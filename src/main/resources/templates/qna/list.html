@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}"> <!-- 파라미터로 조각코드 받기 -->
+
+   <th:block th:fragment="content">
+   
+      <div class="content-header">
+         <div class="cormorant-font">Q&A</div>
+         <p class="p_text_deco">질문과 답변</p>
+      </div>
+         
+      <table class="list-table list-qna">
+         <!-- 게시글 헤더 -->
+         <thead>
+            <tr>
+               <th>번호</th>
+               <th>제목</th>
+               <th>작성자</th>
+               <th>작성일</th>
+               <th>답변 여부</th>
+            </tr>
+         </thead>
+               
+            <!-- 테이블에 타임리프 처리 -->
+         <tbody>
+            <tr th:each="dto : ${list}">
+               <td>[[${dto.no}]]</td>
+               <td>
+                  <a th:href="@{/qna/read(no = ${dto.no}, page= ${list.number + 1})}">
+                     [[${dto.title}]]
+                  </a>
+                  <!-- 비공개 게시글인 경우 자물쇠 아이콘 표시 -->
+   				  <span th:if="${dto.privatePost}" class="private-icon" title="비공개 게시글">🔒</span>
+               </td>
+               <td>[[${dto.member.name}]]</td>
+               <td>[[${#temporals.format(dto.regDate, 'yy.MM.dd')}]]</td> 
+               <td>
+                  <div class="answer_ck"
+                     th:text="${dto.answer == true ? '답변완료' : '문의 중'}"                     th:classappend="${dto.answer == true ? 'ansOk' : 'ansNo'}">
+                  </div>
+               </td> 
+            </tr>
+         </tbody>         
+      </table>
+         
+      <!-- 페이지네이션 -->
+      <ul class="pagenation h-100 justify-content-center align-items-center">
+         <th:block th:each="page : ${#numbers.sequence(1, list.totalPages)}">
+            <th:block th:if="${list.number+1 == page}">
+               <li class="page-item active">               
+                  <a class="page-link" th:href="@{/qna/list(page = ${page})}">[[${page}]]</a>
+               </li>
+            </th:block>
+            <th:block th:unless="${list.number+1 == page}">
+               <li class="page-item">
+                  <a class="page-link" th:href="@{/qna/list(page = ${page})}">[[${page}]]</a>
+               </li>
+            </th:block>
+         </th:block>
+      </ul>
+      
+      <div class="qnaWrite_btn">
+         <button type="button" th:onclick="|window.location.href='/qna/register'|">글쓰기</button>
+      </div>
+
+      <!-- 검색과 글쓰기 버튼 -->
+      <div class="qna-serch">
+            
+         <form th:action="@{/qna/list}" method="get">
+            <select name="category" class="search-category" th:value="${category}">
+               <option value="all">전체</option>
+               <option value="title" th:selected="${category == 'title'}">제목</option>
+               <option value="content" th:selected="${category == 'content'}">내용</option>
+               <option value="id" th:selected="${category == 'id'}">작성자</option>
+            </select>
+         <input type="text" name="keyword" th:value="${keyword}" class="keyword_input">
+         <button type="submit">검색</button>
+      </div>
+
+   </th:block>
+
+</th:block>
+
+
+
+
+
+

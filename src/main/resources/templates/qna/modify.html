@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}"> <!-- 파라미터로 조각코드 받기 -->
+
+   <th:block th:fragment="content">
+   
+      <div class="content-header">
+         <div class="cormorant-font">Q&A</div>
+         <p class="p_text_deco">질문과 답변</p>
+      </div>
+      
+   <div class="container register-box">
+       <form id="qnaForm" th:action="@{/qna/modify}" th:method="post" onsubmit="return validateForm()">
+        
+		<div class="flex_css">
+		    <span class="width_box"><label for="writer">작성자</label></span>
+		    <input type="text" id="writer" name="writer" th:value="${dto.member.name}" readonly>
+		<div class="private-container">
+		    <input type="checkbox" id="privatePost" name="privatePost" value="true" onclick="togglePasswordField()" th:checked="${dto.privatePost}">
+		    <label for="privatePost">비공개</label>
+		</div>
+		</div>
+         
+		<div class="flex_css">
+		    <span class="width_box"><label for="title">제목</label></span>
+		    <input type="text" id="title" name="title" th:value="${dto.title}" required>
+		</div>
+      
+      
+       <div class="flex_css" style="height:120px;">
+            <span class="width_box"><label for="content">내용</label></span>
+            <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
+        </div>
+         
+		<div class="flex_css">
+		    <span class="width_box"><label for="password">비밀번호</label></span>
+		    <input type="password" id="password" name="password" th:value="${dto.password}" disabled>
+		</div>
+      
+        <input type="hidden" id="no" name="no" th:value="${dto.no}" />
+        
+        <button type="button" class="btn btn-primary modifyBtn">수정</button>
+
+        <button type="button" class="btn btn-info listBtn">목록으로</button>
+
+        <button type="button" class="btn btn-danger removeBtn">삭제</button>
+        
+        </form>
+        
+
+        <script th:inline="javascript">
+        
+        // 비공개 체크박스 클릭 시 비밀번호 입력란 활성화/비활성화
+		function togglePasswordField() {
+		    const privateCheckbox = document.getElementById("privatePost");
+		    const passwordField = document.getElementById("password");
+		
+		    if (privateCheckbox.checked) {
+		        passwordField.disabled = false;
+		        passwordField.required = true;
+		    } else {
+		        passwordField.disabled = true;
+		        passwordField.required = false;
+		        passwordField.value = ""; // 공개 상태로 변경 시 비밀번호 필드 초기화
+		    }
+		}
+		        
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("qnaForm");
+
+        // 수정 버튼 클릭 이벤트
+        document.querySelector(".modifyBtn").addEventListener("click", function () {
+            if (confirm("수정하시겠습니까?")) {
+                form.action = "/qna/modify";
+                form.method = "post";
+                form.submit();
+            }
+        });
+
+        // 목록으로 버튼 클릭 이벤트
+        document.querySelector(".listBtn").addEventListener("click", function () {
+            form.action = "/qna/list";
+            form.method = "get";
+            form.submit();
+        });
+
+        // 삭제 버튼 클릭 이벤트
+        document.querySelector(".removeBtn").addEventListener("click", function () {
+            if (confirm("삭제하시겠습니까?")) {
+                form.action = "/qna/remove";
+                form.method = "post";
+                form.submit();
+            }
+        });
+    });
+</script>
+   
+   </th:block>
+
+</th:block>
+
+
+
+
+
+

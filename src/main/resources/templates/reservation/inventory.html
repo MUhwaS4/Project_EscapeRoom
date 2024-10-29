@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<head>
+	<title>
+		예약 목록
+	</title>
+</head>
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}">
+<th:block th:fragment="content"> 
+
+	<link rel="stylesheet" href="/css/reservation/inventory.css">
+	
+	<section class="member_list">
+	
+		<div class="view inventory_list">
+			
+			<div>
+				<div class="sign_title">Reservation&nbsp;&nbsp;List</div>
+				<div class="sign_text inv_text">예약 목록</div>
+			</div>
+			
+				<div class="container">
+					
+					
+				<div class="spot_list">
+					<div class="form-group" id="spotButtonContainer">
+						<!-- 버튼들이 여기 생성됨 -->
+					</div>
+					
+					<button class="btn btn-secondary" id = 'btn_search' >전체</button>
+				</div>
+				
+				<table class="table list-table list-res">
+					<thead>
+						<tr>
+							<th>예약 번호</th>
+							<th>회원 이름</th>
+							<th>테마</th>
+							<th>지점</th>
+							<th>예약 날짜</th>
+							<th>예약 시간</th>
+							<th>인원 수</th>
+							<th>예약 취소</th>
+						</tr>
+					</thead>
+					
+					<tbody id = 'resultList'>
+						<tr th:each="reservation : ${reservations}">
+							<td th:text="${reservation.no}"></td>
+							<td th:text="${reservation.member.name}"></td>
+							<td th:text="${reservation.theme}"></td>
+							<td th:text="${reservation.spot}"></td>
+							<td th:text="${#dates.format(reservation.reservationDate, 'yy-MM-dd')}"></td>
+							<td th:text="${reservation.reservationTime, 'hh:mm'}">-</td>
+							<td th:text="${reservation.people}"></td>
+						</tr>
+					</tbody>
+				</table>
+			
+			</div>
+		
+		</div>
+
+	</section>
+
+</th:block>
+</th:block>
+<script type="module">
+	import commonjs from '/js/reservation/common.js';
+
+	// 지점 목록 조회 함수 추가
+	const spotSearch = function () {
+		const fn_success = function (result) {
+			const container = document.querySelector('#spotButtonContainer');
+			result.forEach(function (spotName) {
+				const link = document.createElement('a');
+				link.href = "#";
+				link.classList.add("btn", "btn-primary", "m-1");
+				link.textContent = spotName.spot_name;
+				link.addEventListener('click', function (e) {
+					e.preventDefault();
+					searchBySpot(spotName.spot_name); // 선택된 지점으로 필터링된 결과 출력
+				});
+				container.appendChild(link);
+			});
+		};
+		
+		const fn_fail = function (result) {
+			console.error("지점 목록 조회 실패:", result);
+		};
+		
+		const data = {};
+		commonjs.ajaxRequest('get', '/reservation/spotList', data, fn_success, fn_fail);
+	};
+
+   		// 페이지 로드 완료 시
+   		 window.onload = function () {
+	  	  	spotSearch();
+
+	   		searchBySpot(); // 전체 예약 목록 표시
+		
+  		  // 조회 버튼 클릭 이벤트 등록(전체 예약 목록)
+		document.getElementById('btn_search').addEventListener('click', function() {
+		  	 searchBySpot(); 
+
+		});
+
+	};
+
+	// 지점별 예약 목록 조회
+	const searchBySpot = function (selectedSpot = '') { // 기본값으로 빈 문자열 설정
+		const fn_success = function (result) {
+			const tbody = document.querySelector('#resultList');
+			tbody.innerHTML = '';
+
+		   if (!result || result.length === 0) {
+                console.warn("조회된 예약 정보가 없습니다.");
+                return;
+            }
+            
+            const columList = ['no', 'name', 'theme', 'spot', 'reservationDate',  'reservationTime', 'people'];
+            for (let i = 0; i < result.length; i++) {
+                const tr = document.createElement('tr');
+                const resultRow = result[i];
+                for (let j = 0; j < columList.length; j++) {
+                    const td = document.createElement('td');
+                    const columName = columList[j];
+                    const columValue = resultRow[columName];
+
+                 	td.innerText = columValue || '-';
+                    tr.append(td);
+                }
+                
+                // 삭제 버튼 추가 - 수정된 부분
+                const deleteTd = document.createElement('td');
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerText = '예약 취소';
+                deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm');
+                deleteBtn.onclick = function() {
+                    deleteReservation(resultRow.no); // 예약 번호로 삭제 요청
+                };
+                deleteTd.append(deleteBtn);
+                tr.append(deleteTd);
+
+
+				tbody.append(tr);
+			}
+		};
+
+		const fn_fail = function (result) {
+			console.log(result);
+		};
+
+		// 전체 목록 또는 특정 지점 목록 가져오기
+		const data = selectedSpot ? { spot: selectedSpot } : {}; // 수정된 부분
+		commonjs.ajaxRequest('get', '/reservation/inventoryList', data, fn_success, fn_fail);
+	};
+
+	// 삭제 함수 수정 - DELETE 요청 사용
+	const deleteReservation = function (reservationNo) {
+	const fn_success = function () {
+		console.log("예약 삭제 성공:", reservationNo);
+		searchBySpot(); // 삭제 후 목록 새로고침
+	};
+	
+	const fn_fail = function (result) {
+		console.error("예약 삭제 실패:", result);
+	};
+
+	if (confirm("이 예약을 삭제하시겠습니까?")) {
+		commonjs.deleteReservation(reservationNo, fn_success, fn_fail);
+	}
+
+};
+
+</script>

@@ -1,0 +1,212 @@
+@charset "UTF-8";
+
+.read_div {
+	width: 1215px;
+	
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.qna-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.qna-comment {
+    background-color: rgb(245 217 33);
+    color: #000000;
+    font-weight: bold;
+    padding: 5px 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 14px;
+    text-align: center;
+}
+
+.info-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    justify-content: space-between;
+}
+
+.writer-info {
+    font-size: 16px;
+    color: #e0e0e0;
+    margin-right: 150px;
+}
+
+.writer-info span {
+    display: inline-block;
+    vertical-align: middle;
+	font-weight: bold;
+}
+
+.qna-date {
+    font-size: 16px;
+    color: #e0e0e0;
+    
+}
+
+.qna-content {
+    font-size: 18px;
+    color: #eee;
+    min-height: 200px;
+    line-height: 1.6;
+}
+
+.card {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 0;
+    border-radius: 8px;
+}
+
+.comment-input-container {
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
+    margin: 0 auto;
+    padding-top: 20px;
+    
+}
+
+.form-control.comment-input {
+    width: 100%;
+    background-color: #3a3a3a;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    resize: none;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.btn-secondary.comment-button {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    max-width: 120px;
+    align-self: flex-end;
+    margin-top: 10px;
+}
+
+.comment-item {
+	width: 97.5%;
+    background-color: #2f2f2f;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    color: #e0e0e0;
+}
+
+.card-body {
+    padding: 20px 0;
+    border-radius: 8px;
+}
+
+.card-header h6 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e0e0e0;
+}
+
+.card-header {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #e0e0e0;
+}
+
+.comment-item {
+    background-color: #2f2f2f;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.comment-author {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.comment-content {
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 1.5;
+}
+
+.comment-delete-btn {
+    align-self: flex-end;
+    color: #e0e0e0;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.comment-delete-btn:hover {
+    color: #ff0000;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.password-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.password-container .form-group {
+    margin-top: 100px;
+}
+
+.password-container .form-group input[type="password"] {
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.password-container .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 100px;
+}
+
+
+
+
+
+
+

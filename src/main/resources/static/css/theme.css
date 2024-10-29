@@ -1,0 +1,169 @@
+@charset "UTF-8";
+
+.content-header {
+	padding-top: 40px;
+	width: 100%;
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+}
+
+.content-header > div { 
+	font-size: 36px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.content-header > p {
+	font-size: 18px;
+}
+
+.content-header > p.p_text_deco {
+	font-size: 12px;
+    letter-spacing: 10.0px;
+    padding: 0 0px 7px 15px;
+    text-align: center;
+    display: inline-block;
+    width: 1200px;
+    border-bottom: 1px solid white;
+}
+
+.add-btn {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.add-btn button {
+	font-size: 18px;
+	padding: 10px;
+}
+
+.container-inr > .button-container {
+	margin-bottom: 80px;
+}
+
+.button-container a + a {
+	margin-left : 20px;
+}
+
+.button-container a {
+	text-decoration: none;
+	color: #949494;
+	font-size: 16px;
+	font-weight: 600;
+	padding: 10px;
+	border-radius: 5px;
+	background-color: #e2e2e2;
+	transition: 0.5s;
+}
+
+.button-container a:hover {
+	text-decoration: none;
+	font-weight: 600;
+	color: #0D0D0D;
+	background-color: #ffffff;
+}
+
+.content {
+	display: flex;
+	justify-content: space-between;
+	height: 400px;
+}
+
+.content + .content {
+	margin: 80px 0;
+}
+
+.content > .img-area {
+	width: 25%;
+	overflow: hidden;
+}
+
+.content > .img-area > img {
+	width: 100%;
+	height: 100%;
+	background-color: black;
+
+	object-fit:fill;
+}
+
+.content > .theme {
+	width: 70%;
+	padding-left: 40px;
+}
+
+.content > .theme > .theme-top {
+	width: 100%;
+	height: 30px;
+	font-size: 20px;
+	overflow: hidden;
+	padding: 10px 0 10px 10px;
+	border-top: 2px solid #D9D9D9;
+	border-bottom : 2px solid #D9D9D9;
+	margin-bottom: 10px;
+	line-height: 30px;
+}
+
+.content > .theme > .theme-top a {
+	text-decoration: none;
+	color: #fff;
+	font-weight: 600;
+}
+
+.content > .theme > .theme-content {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	height: calc(100% - 80px);
+}
+
+.content > .theme > .theme-content .theme-btm {
+	border-top: 1px solid #D9D9D9;
+	border-bottom: 1px solid #D9D9D9;
+	padding: 10px 0 ;
+	margin-top: 20px;
+	font-size: 14px;
+}
+
+.content > .theme > .theme-content .theme-btm > span:nth-child(2) {
+	padding-right: 10px;
+}
+
+.content > .theme > .theme-content > div:first-child {
+	width: calc(60% - 20px);
+}
+
+.content > .theme > .theme-content > div + div {
+	margin-left: 20px;
+}
+
+.content > .theme > .theme-content > div .theme-middle {
+	height: calc(100% - 80px);
+	overflow-y: scroll;
+	background-color: #7e7e7e61;
+	border-radius: 5px;
+	padding: 20px;
+	line-height: 2.5vh;
+	font-size: 14px;
+}
+
+.content > .theme > .theme-content > .theme-graph {
+	width: 40%;
+	height: 300px;
+	background-color: #7e7e7e61;
+	border-radius: 5px;
+	padding: 20px;
+}
+
+.content > .theme > .theme-content > .theme-graph div {
+	width: 100%;
+	height: 100%;
+}
+
+.theme.form-group label{
+	margin-top: 20px;
+}

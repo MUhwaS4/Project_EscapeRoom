@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}">
+<th:block th:fragment="content">
+
+<!-- 테마 소개 페이지 -->
+<div class="content-header">
+	<div class="cormorant-font">Theme</div>
+	<p class="p_text_deco">테마안내</p>
+</div>
+
+<div class="container-inr">
+	<div class="add-btn">
+		<a th:href="@{/theme/theme-register}">
+			<button type="button" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ROLE_ADMIN')">Add Theme</button>
+		</a>
+	</div>
+	<div class="button-container">
+		<a th:href="@{/theme/theme-list(spot='홍대')}">홍대점</a>
+		<a th:href="@{/theme/theme-list(spot='인천구월')}">인천구월점</a>
+		<a th:href="@{/theme/theme-list(spot='서면')}">서면점</a>
+	</div>
+	<div class="content" th:each="dto, iterStat : ${list}">
+		<div class="img-area">
+			<img th:src="@{/uploadfile/{imgPath}(imgPath=${dto.imgPath})}" alt="Theme Image" class="theme-img">
+		</div>
+
+		<div class="theme">
+			<div class="theme-top">
+				<span>
+					<a th:href="@{/theme/theme-modify(theme = ${dto.theme})}" 
+				       th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+				        [[${dto.theme}]]
+				    </a>
+				    <span th:if="${#authorization.expression('!hasRole(''ROLE_ADMIN'')')}" style="font-weight:bold;">
+				        [[${dto.theme}]]
+				    </span>
+				</span>
+				<span> - [[${dto.spotName}]]점</span>
+				<span>[[${dto.genre}]]</span>
+			</div>
+
+			<div class="theme-content">
+				<div>
+					<div class="theme-middle" th:utext="${dto.sysnopsis}">
+					</div>
+					<div class="theme-btm">
+						<span class="theme-etc-level" th:data-level="${dto.level}">난이도 : [[${dto.level}]]</span>
+						<span>( 제한시간 : [[${dto.limitedTime}]]분 )</span>
+						<span> 최소~최대인원 : [[${dto.minPeople}]]명</span> ~
+						<span> [[${dto.maxPeople}]]명</span>
+					</div>
+				</div>
+
+				<div class="theme-graph">
+					<!-- 차트를 그릴 div 추가 -->
+					<div th:id="'chart-' + ${iterStat.index}"></div>
+				</div>
+			</div>
+			
+			<!-- JavaScript에서 사용할 비율 데이터를 data-attributes로 설정 -->
+			<div class="hidden" 
+				 th:data-lock-ratio="${dto.lockRatio}" 
+				 th:data-plant-ratio="${dto.plantRatio}" 
+				 th:data-chart-id="'chart-' + ${iterStat.index}">
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ECharts 라이브러리 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<script th:inline="javascript">
+	window.onload = function() {
+		// 이미지 기본 처리
+		document.querySelectorAll(".theme-img").forEach(function(img) {
+			if (img.getAttribute("src").endsWith("/uploadfile/")) {
+				img.setAttribute("src", "/images/default.png");
+			}
+			img.onerror = function() {
+				img.setAttribute("src", "/images/default.png");
+			};
+		});
+
+		// ECharts 차트 설정 함수
+		function drawPieChart(lockRatio, plantRatio, elementId) {
+			const chartDom = document.getElementById(elementId);
+			if (!chartDom) {
+				console.warn("Chart DOM element not found:", elementId);
+				return;
+			}
+			const ratioChart = echarts.init(chartDom);
+			const option = {
+				tooltip: {
+					trigger: 'item',
+					padding: [5, 10], // 툴팁 내부 여백 (위아래, 좌우)
+					borderRadius: 5, // 모서리 둥글게 설정
+					extraCssText: 'width: 100px; height: 12px;' // 직접적인 width와 height 설정
+				},
+				legend: {
+					orient: 'vertical',
+					left: 'left',
+					textStyle: {
+					color: '#fff', // 범례 텍스트 색상을 흰색으로 설정
+					fontSize: 12  // 폰트 크기 조정 (필요시)
+				}
+				},
+				series: [
+					{
+						name: '비율',
+						type: 'pie',
+						radius: ['35%', '65%'],
+						avoidLabelOverlap: false,
+						itemStyle: {
+							borderRadius: 10,
+							borderColor: '#fff',
+							borderWidth: 2
+						},
+						label: {
+							show: true,
+							position: 'outside',
+							formatter: '{b}: {d}%'
+						},
+						labelLine: {
+							show: true,
+							length: 5,
+							length2: 10 // 꺾인 라인 부분의 길이 조정
+						},
+						data: [
+	                        { 
+	                            value: lockRatio, 
+	                            name: '자물쇠',
+	                            itemStyle: {
+	                                color: '#DD4346' // 왼쪽 색상 설정 (빨간색)
+	                            }
+	                        },
+	                        { 
+	                            value: plantRatio, 
+	                            name: '장치',
+	                            itemStyle: {
+	                                color: '#F7D756' // 오른쪽 색상 설정 (노란색)
+	                            }
+	                        }
+	                    ]
+					}
+				]
+			};
+
+			ratioChart.setOption(option);
+		}
+
+		// 각 차트 그리기, 조금의 지연 추가
+		setTimeout(() => {
+			document.querySelectorAll(".hidden").forEach(function(element) {
+				const lockRatio = parseInt(element.getAttribute("data-lock-ratio")) || 0;
+				const plantRatio = parseInt(element.getAttribute("data-plant-ratio")) || 0;
+				const chartId = element.getAttribute("data-chart-id");
+				drawPieChart(lockRatio, plantRatio, chartId);
+			});
+		}, 500); // 500ms 지연 추가
+		
+	};
+	
+	
+	//난이도 별로 변경
+	  $(document).ready(function() {
+		// 모든 난이도 요소를 선택
+		$('.theme-etc-level').each(function() {
+			// data-level 속성에서 난이도 값을 가져옴
+			const level = parseInt($(this).attr('data-level'), 10);
+			
+			if (!isNaN(level)) {
+				// 난이도 숫자만큼 별 추가
+				let stars = '';
+				for (let i = 0; i < level; i++) {
+					stars += '⭐';
+				}
+				
+				// 난이도 텍스트를 별로 변환
+				$(this).text(`난이도 : ${stars}`);
+			}
+		});
+	});
+
+</script>
+
+</th:block>
+</th:block>

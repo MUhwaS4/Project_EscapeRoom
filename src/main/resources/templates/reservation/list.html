@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<head>
+	<title>
+		예약하기
+	</title>
+</head>
+	<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}">
+	<th:block th:fragment="content"> 
+
+	<link rel="stylesheet" href="/css/reservation/list.css"> 
+	 
+	<section class="member_login">
+		<div class="view reservation_list">
+	
+			<div class="content-header">
+				<div class="cormorant-font">Reservation</div>
+				<p class="p_text_deco">예약하기</p>
+			</div>
+		
+		    <div class="container">
+		
+		 <div class="step-indicator">
+		    <div class="step active">01. 예약 선택</div>
+		    <div class="separator"></div>
+		    <div class="step">02. 예약 정보 입력</div>
+		    <div class="separator"></div> 
+		    <div class="step">03. 예약 완료</div>
+		</div>
+    
+    <div>
+    
+		<div class="form-row">    
+	        <div class="form-group">
+	            <label for="spot">지점 선택</label>
+	            <select class="form-control" id="spot" name="spot" required onchange = "themeSearch()">
+	                <option value="" disabled selected>지점 선택</option>
+	            </select>
+	        </div>
+	        <div class="form-group">
+	            <label for="reservationDate">예약 날짜</label>
+	            <input type="date" class="form-control" id="reservationDate" name="reservationDate" onchange = "themeSearch()">
+	        </div>
+		</div>
+	
+	
+	        <h3>예약 가능한 테마</h3>
+	        <div class="theme-list" id = "themeList">
+				 <!-- 예약 가능한 테마가 여기에 순차적으로 추가됨 -->
+	        </div>
+
+        <input type="hidden" id="selectedTime" name="selectedTime">
+        
+    </div>
+
+</div>
+	
+		</div>
+	</section>
+
+<script>
+// 공통 기능 여기다 구현
+// module 로 쓰려니까 이클립스 맛탱이감
+var ajaxRequest = function (method, url, data = null, onSuccess = null, onError = null) {
+    const options = {
+        method: method.toUpperCase(),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    };
+    
+	// GET 요청 시 쿼리 문자열 생성
+    if (method.toUpperCase() === 'GET' && data) {
+        const queryString = new URLSearchParams(data).toString();
+        url += (url.includes('?') ? '&' : '?') + queryString; // URL에 쿼리 문자열 추가
+    }
+ 
+    // POST일 경우 데이터를 요청에 포함
+    if (method.toUpperCase() === 'POST' && data) {
+        options.body = JSON.stringify(data);
+    }
+
+    fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (onSuccess) {
+                onSuccess(data);  // 성공 시 동작하는 함수 호출
+            }
+        })
+        .catch(error => {
+            if (onError) {
+                onError(error);  // 실패 시 동작하는 함수 호출
+            } else {
+                console.error('There was a problem with your fetch operation:', error);
+            }
+        });
+}
+</script>
+
+ <script>
+
+	window.onload = function(){
+		spotSearch();
+		
+	}
+	// 오늘 이전 날짜 클릭 못하도록 수정
+    var today = new Date();
+    today.setDate(today.getDate() + 1); // 내일 날짜로 설정
+	var year = today.getFullYear();
+	var month = (today.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 +1
+	var day = today.getDate().toString().padStart(2, '0'); // 날짜는 2자리로 맞춤
+	
+	var minDate = `${year}-${month}-${day}`;
+	var minDate = `${year}-${month}-${day}`;
+	
+	// input 필드에 min 속성으로 설정
+	document.getElementById('reservationDate').setAttribute('min', minDate);
+	
+    // 한 달 후 날짜 계산
+    var nextMonth = new Date(today);
+    nextMonth.setMonth(today.getMonth() + 1); // 다음 달로 설정
+    var maxYear = nextMonth.getFullYear();
+    var maxMonth = (nextMonth.getMonth() + 1).toString().padStart(2, '0'); // 월을 다시 계산
+    var maxDay = nextMonth.getDate().toString().padStart(2, '0'); // 날짜는 오늘과 동일
+
+    var maxDate = `${maxYear}-${maxMonth}-${maxDay}`;
+	
+    // input 필드에 max 속성으로 설정
+	document.getElementById('reservationDate').setAttribute('max', maxDate);
+    
+    
+    //init 
+    // 지점 목록 조회
+    var spotSearch = function(){
+    	// 지점 검색
+	    var fn_success = function(result){
+	    	var el_spot = document.querySelector('#spot');
+	    	result.forEach(function(spotName){
+	    		spotName = spotName.spot_name;
+	    		var option = document.createElement('option');
+	    		option.value = spotName;
+	    		option.innerHTML = spotName;
+	    		el_spot.append(option);
+	    	})
+	    	
+	    	
+    	};
+	    var fn_fail = function(result){};
+	    var data = {
+	    }
+		ajaxRequest('get', '/reservation/spotList', data, fn_success, fn_fail);
+    }
+    
+    // 테마 목록 조회
+    var themeSearch = function(){
+    	// 유효성 검증 (날짜와 지점이 선택됐을때만 테마 목록 조회)
+        const selectedDate = document.getElementById('reservationDate').value;
+        const selectedSpot = document.getElementById('spot').value;
+    	if(selectedDate == "" || selectedSpot == ""){
+			return;
+    	}
+    	
+	    var fn_success = function(result){
+	    	var themeList = document.querySelector('#themeList');
+	    	themeList.innerHTML = '';
+	    	result.forEach(function(themeRowData){
+	    	var themeList = document.querySelector('#themeList');
+	    	
+	    	var genre = themeRowData.genre;
+	    	var level = themeRowData.level;
+	    	var limited_time = themeRowData.limited_time;
+	    	var lock_ratio = themeRowData.lock_ratio;
+	    	var max_people = themeRowData.max_people;
+	    	var min_people = themeRowData.min_people;
+	    	var plant_ratio = themeRowData.plant_ratio;
+	    	var spot_spot_name = themeRowData.spot_spot_name;
+	    	var sysnopsis = themeRowData.sysnopsis;
+	    	var theme = themeRowData.theme;
+	    	var reservationTimeArrayString =  themeRowData.reservationTime;
+	    	var reservationTimeArray = reservationTimeArrayString.substr(0, reservationTimeArrayString.length - 1).split('|');
+	    	
+	    	//div set
+	    	var div_themeCard = document.createElement('div');
+	    	div_themeCard.classList.add("theme-card");
+	    	
+	    	
+	    	//img set
+	    	var img_area = document.createElement('div');
+	    	
+	    	var img = document.createElement('img')
+	    	img.src = themeRowData.imageUrl;
+	    	img.alt = theme + " 이미지";
+	    	img.classList.add("img-fluid");
+	    	img_area.appendChild(img);
+	    	
+	    	img_area.classList.add("img_area");
+	    	div_themeCard.appendChild(img_area);
+	    	
+	    	// 중간 부모 div
+	    	var div = document.createElement('div');
+	    	div_themeCard.appendChild(div);
+	    	div.classList.add("content_area");
+
+	    	//h5 set	 
+	    	var h5 = document.createElement('h5');
+	    	h5.innerHTML = theme;
+	    	div.appendChild(h5);
+
+	    	//ul,li set
+	    	var ul = document.createElement('ul');
+	    	
+	    	var li_genre 		= document.createElement('li');
+	    	var li_level 		= document.createElement('li');
+	    	var li_limitedTime 	= document.createElement('li');
+	    	var li_people 		= document.createElement('li');
+	    	var li_lockRatio 	= document.createElement('li');
+	    	var li_plantRatio 	= document.createElement('li');
+	    	
+	    	li_genre.innerHTML = "장르 : " + genre;
+	    	li_level.innerHTML = "난이도 : " + level;
+	    	li_limitedTime.innerHTML = "제한시간 : " + limited_time;
+	    	li_people.innerHTML = "인원 : " + min_people + " ~ " + max_people;
+	    	li_lockRatio.innerHTML = "자물쇠 비율 : " + lock_ratio;
+	    	li_plantRatio.innerHTML = "장치 비율 : " + plant_ratio;
+	    	
+	    	ul.append(li_genre);
+	    	ul.append(li_level);
+	    	ul.append(li_limitedTime);
+	    	ul.append(li_people);
+	    	ul.append(li_lockRatio);
+	    	ul.append(li_plantRatio);
+	    	
+	    	div.appendChild(ul);
+	    	
+	    	//reservationTime Button Set
+		    var timeButtonsWrapper = document.createElement('div'); 
+	
+	    
+	    	reservationTimeArray.forEach(function(reservationTime){
+	    	var input = document.createElement('button');
+	    	input.classList.add('btn');
+	    	input.classList.add('btn-light');
+	    	input.classList.add('time-slot');
+	    	input.innerHTML = reservationTime.substring(0,2) + " : " + reservationTime.substring(2,4);
+	    	
+	    	if(reservationTime.substr(reservationTime.length - 1, reservationTime.length) != 'Y'){
+	    		input.innerHTML = reservationTime.substring(0,2) + " : " + reservationTime.substring(2,4) + '<br>예약 마감';
+	    		input.style.pointerEvents = 'none';
+		    	input.style.color = 'red';
+	    		}
+	    	input.addEventListener('click', clickCheck);
+	    	timeButtonsWrapper.appendChild(input);
+	    		
+	    	})
+	    	
+	    	div.appendChild(timeButtonsWrapper); 
+	    	timeButtonsWrapper.classList.add('time-box');
+	   
+	    	//button set 
+	    	var button = document.createElement('button');
+	    	button.classList.add("btn");
+	    	button.classList.add("btn-success");
+	    	button.classList.add("reserve-button"); 
+	    	button.addEventListener('click', confirmReservation);
+	    	button.innerHTML = '예약하기'
+	    	
+	    	div.appendChild(button);
+	    	themeList.appendChild(div_themeCard);
+	    	
+	    	})
+	    	
+	    };
+	    
+	    var fn_fail = function(result){};
+	    var data = {
+	    	spot : selectedSpot
+	    	, selectedDate : selectedDate
+	    }
+		ajaxRequest('get', '/reservation/themeList', data, fn_success, fn_fail);
+    }
+    
+    
+    function confirmReservation() {
+        const themeName = this.parentElement.querySelector('h5').innerHTML;
+        const selectedDate = document.getElementById('reservationDate').value;
+        const selectedSpot = document.getElementById('spot').value;
+        const selectedTime = this.parentElement.querySelector('.selected').innerHTML;
+
+        if (selectedDate && selectedSpot && selectedTime) {
+            const queryString = `?theme=${encodeURIComponent(themeName)}&date=${encodeURIComponent(selectedDate)}&spot=${encodeURIComponent(selectedSpot)}&time=${encodeURIComponent(selectedTime)}`;
+            console.log("Redirecting to: ", queryString); // 로그 추가
+            window.location.href = "/reservation/information" + queryString; // 이 URL로 리디렉션
+        } else {
+            alert("날짜, 지점, 시간을 모두 선택해 주세요.");
+        }
+    }
+    
+    function clickCheck(){
+    	/* 예약 목록 조회*/
+    	reservationTimeList = this.parentElement.childNodes;
+    	
+    	/* 선택 초기화 */
+    	for(i = 0 ; i < reservationTimeList.length; i++){
+    		reservationTimeList[i].classList.remove('selected');
+    	}
+    	
+    	/* 선택 표시 */
+    	this.classList.add('selected');
+    }
+
+    
+</script>
+
+</th:block>
+</th:block>

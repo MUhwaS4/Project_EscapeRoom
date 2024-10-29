@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}"> <!-- 파라미터로 조각코드 받기 -->
+
+<th:block th:fragment="content">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=269a5b5e952ab7fb50e8dad750dd9a53&libraries=services"></script>
+<div class="content-header">
+	<div class="cormorant-font">Spot</div>
+	<p class="p_text_deco">예약 지점 안내</p>
+</div>
+
+<div class="container-inr">   
+		<div class="location-img">
+			<img src="/images/spot-map.svg" alt="지점안내지도">
+		</div>
+
+		 <div class="location-info">
+            <div class="location" th:each="dto : ${spots}">
+							<p class="spot-title">[[${dto.spotName}]]점</p>
+              <div>
+					  <div class="location-map" 
+			                     th:attr="id='map-' + ${dto.spotName}" 
+			                     th:data-latitude="${dto.latitude}" 
+			                     th:data-longitude="${dto.longitude}" 
+			                     th:data-name="${dto.spotName}">
+                	</div>
+					<div class="location-details">
+							<table>
+									<tr>
+										<td>주소</td>
+										<td>[[${dto.address}]]</td>
+									</tr>
+									<tr>
+										<td>전화</td>
+										<td>[[${dto.tel}]]</td>
+									</tr>
+							</table>
+					</div>
+				</div>
+            </div>
+        </div>
+	</div>
+	
+	<script th:inline="javascript">
+	    $(document).ready(function() {
+	        $('.location-map').each(function(index, element) {
+	            var $element = $(element);
+	            var latitude = $element.attr('data-latitude'); // 위도 가져오기
+	            var longitude = $element.attr('data-longitude'); // 경도 가져오기
+	            var spotName = $element.attr('data-name'); // 이름 가져오기
+	            
+	            console.log("Latitude:", latitude); // 디버깅 로그
+	            console.log("Longitude:", longitude); // 디버깅 로그
+	            console.log("Spot:", spotName); // 디버깅 로그
+	            
+	            if (latitude && longitude) {
+	                var coords = new kakao.maps.LatLng(latitude, longitude);
+	                var mapOption = {
+	                    center: coords,
+	                    level: 3
+	                };
+	
+	                var map = new kakao.maps.Map(element, mapOption);
+	                var marker = new kakao.maps.Marker({
+	                    map: map,
+	                    position: coords
+	                });
+	                
+	                
+	                var content = `<div class="customoverlay">
+	                    <span class="title">${spotName}점</span>
+	                </div>`;
+
+		            // 커스텀 오버레이를 생성합니다
+		            var customOverlay = new kakao.maps.CustomOverlay({
+		                map: map,
+		                position: coords,
+		                content: content,
+		                yAnchor: 1 
+		            });
+	                
+	                customOverlay.setMap(map);
+	               
+	            } else {
+	                console.warn("Latitude or Longitude is undefined for element:", $element[0]);
+	            }
+	        });
+	    });
+	</script>
+</th:block>
+
+</th:block>
+
+
+
+
+
+

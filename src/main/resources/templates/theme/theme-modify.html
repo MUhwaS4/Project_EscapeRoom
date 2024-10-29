@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}">
+<th:block th:fragment="content">
+
+<div class="content-header">
+	<div class="cormorant-font">Theme Modify</div>
+	<p class="p_text_deco">테마 수정</p>
+</div>
+
+<!-- DTO에 데이터가 수집되므로 각 입력필드에 알맞은 name 지정 -->
+<form enctype="multipart/form-data" id="themeForm">
+  <div class="theme form-group">
+    <label>테마명</label>
+    <input type="text" class="form-control" name="theme" th:value="${dto.theme}" readonly>
+  </div>
+  
+  <div class="theme form-group">
+    <label>지점이름</label>
+    <select class="form-control" name="spotName" id="spotName" required>
+    	<option value="" th:selected="${dto.spotName == null}">지점을 선택하세요</option>
+    	<option th:selected="${dto.spotName == '홍대'}">홍대</option>
+		<option th:selected="${dto.spotName == '인천구월'}">인천구월</option>
+        <option th:selected="${dto.spotName == '서면'}">서면</option>
+    </select>
+  </div>
+
+  <div class="theme form-group">
+	  <img id="imagePreview" th:src="@{/uploadfile/{imgPath}(imgPath=${dto.imgPath})}" style="max-width: 200px; margin-top: 10px;">
+  </div>
+
+  <div class="theme form-group">
+      <label>첨부파일</label>
+      <input type="file" class="form-control" name="uploadFile" id="uploadFile" accept="image/*">
+  </div>
+
+  <div class="theme form-group">
+    <label>장르</label>
+    <select class="form-control" name="genre" id="genre" required>
+    	<option value="" th:selected="${dto.genre == null}">장르를 선택하세요</option>
+    	<option th:selected="${dto.genre == '추리/미션'}">추리/미션</option>
+    	<option th:selected="${dto.genre == '코믹'}">코믹</option>
+    	<option th:selected="${dto.genre == '드라마'}">드라마</option>
+    	<option th:selected="${dto.genre == '공포/스릴러'}">공포/스릴러</option>
+    	<option th:selected="${dto.genre == '감성/판타지'}">감성/판타지</option>
+    	<option th:selected="${dto.genre == '어드벤쳐'}">어드벤쳐</option>
+    </select>
+  </div>
+  
+  <div class="theme form-group">
+    <label>난이도</label>
+    <select class="form-control" name="level" id="level" required>
+    	<option value="" th:selected="${dto.level == null}">난이도를 선택하세요</option>
+    	<option th:selected="${dto.level == 1}">1</option>
+    	<option th:selected="${dto.level == 2}">2</option>
+    	<option th:selected="${dto.level == 3}">3</option>
+    	<option th:selected="${dto.level == 4}">4</option>
+    	<option th:selected="${dto.level == 5}">5</option>
+    </select>
+  </div>
+  
+  <div class="theme form-group">
+    <label>제한시간 (분)</label>
+    <input type="number" class="form-control" name="limitedTime" id="limitedTime" th:value="${dto.limitedTime}" min="1" required>
+  </div>
+  
+  <div class="theme form-group">
+    <label>인원 (최소-최대)</label>
+    <div class="d-flex justy-between">
+    <input type="number" class="form-control" name="minPeople" id="minPeople" th:value="${dto.minPeople}" min="1" required  style="width:50%;">
+    
+    <input type="number" class="form-control" name="maxPeople" id="maxPeople" th:value="${dto.maxPeople}" min="1" required style="width:calc(50% - 20px)">
+    </div>
+  </div>
+
+  <div class="theme form-group">
+    <label>자물쇠&장치 비율</label>
+    <div class="d-flex justy-between">
+    <input type="number" class="form-control" name="lockRatio" id="lockRatio" th:value="${dto.lockRatio}" min="0" max="100" required style="width:50%;">
+    <input type="number" class="form-control" name="plantRatio" id="plantRatio" th:value="${dto.plantRatio}" min="0" max="100" required style="width:calc(50% - 20px)">
+    </div>
+  </div>
+  
+  
+  <div class="theme form-group">
+    <label>예약가능시간</label>
+    <input type="text" class="form-control" name="reservationTimes" th:value="${dto.reservationTimes}" required>
+  </div>
+
+  <div class="theme form-group">
+    <label>시놉시스</label>
+    <textarea class="form-control" rows="5" name="sysnopsis" id="sysnopsis" th:text="${dto.sysnopsis}" required></textarea>
+  </div>
+</form>
+
+<div class="d-flex justy-center" style="padding: 20px;">	
+  <button type="button" class="btn btn-primary modifyBtn">수정</button>
+
+  <button type="button" class="btn btn-info listBtn" style="margin:0 20px">목록으로</button>
+
+  <button type="button" class="btn btn-danger removeBtn">삭제</button>
+</div>  
+  <script th:inline="javascript">
+	  $(document).ready(function() {
+	    // 이미지 첨부 시 미리보기 설정
+	    $("#uploadFile").change(function(event) {
+	        const file = event.target.files[0];
+	        if (file) {
+	            const reader = new FileReader();
+	            reader.onload = function(e) {
+	                $("#imagePreview").attr("src", e.target.result).show();
+	            }
+	            reader.readAsDataURL(file);
+	        }
+	    });
+	
+	    $(".modifyBtn").click(function() {
+	        if (!confirm("수정하시겠습니까?")) {
+	            return;
+	        }
+	
+        if (!validateForm()) {
+            return;
+        }
+
+        // POST 방식으로 수정 요청
+        $("#themeForm")
+            .attr("action", "/theme/theme-modify")
+            .attr("method", "post")
+	            .submit();
+	    });
+	
+	    $(".listBtn").click(function() {
+	        $("#themeForm")
+	            .attr("action", "/theme/theme-list")
+	            .attr("method", "get")
+	            .submit();
+	    });
+	
+	    $(".removeBtn").click(function() {
+	        if (confirm("정말 삭제하시겠습니까?")) {
+	            $("#themeForm")
+	                .attr("action", "/theme/remove")
+	                .attr("method", "post")
+	                .submit();
+	        }
+	    });
+	
+	    function validateForm() {
+	        const limitedTime = parseInt($("#limitedTime").val());
+	        const minPeople = parseInt($("#minPeople").val());
+	        const maxPeople = parseInt($("#maxPeople").val());
+	        const lockRatio = parseInt($("#lockRatio").val());
+	        const plantRatio = parseInt($("#plantRatio").val());
+	        const reservationTimes = $("#themeForm").find("input[name='reservationTimes']").val().trim();
+	
+	        if (minPeople > maxPeople) {
+	            alert("최소 인원은 최대 인원보다 클 수 없습니다.");
+	            return false;
+	        }
+	
+	        if (lockRatio + plantRatio !== 100) {
+	            alert("자물쇠와 장치의 비율 합이 100이 되어야 합니다.");
+	            return false;
+	        }
+	
+	        if (limitedTime <= 0) {
+	            alert("제한시간은 0보다 큰 값이어야 합니다.");
+	            return false;
+	        }
+	        
+
+	        if (reservationTimes === "") {
+	          alert("예약 가능한 시간을 입력해 주세요.");
+	          return false;
+	        }
+
+	        // 예약 가능 시간 형식 검증: 예: 10:30, 12:30
+	        const timePattern = /^(\d{1,2}\d{2})(\s*,\s*\d{1,2}\d{2})*$/;
+	        if (!timePattern.test(reservationTimes)) {
+	          alert("올바른 형식의 예약 가능한 시간을 입력하세요. 예: 1030, 1230, 1430");
+	          return false;
+	        }
+	
+	        return true;
+	    }
+	  });
+	  
+	</script>
+</th:block>
+
+</th:block>

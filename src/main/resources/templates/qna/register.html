@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}"> <!-- 파라미터로 조각코드 받기 -->
+
+   <th:block th:fragment="content">
+   
+      <div class="content-header">
+         <div class="cormorant-font">Q&A</div>
+         <p class="p_text_deco">질문과 답변</p>
+      </div>
+      
+   <div class="container register-box">
+       <form id="qnaForm" th:action="@{/qna/register}" th:method="post" onsubmit="return validateForm()">
+      
+            <div class="flex_css">
+               <span class="width_box"><label for="writer">작성자</label></span>
+               <input type="text" id="writer" name="writer" th:value="${writerName}" readonly>
+               <div class="private-container">
+                  <input type="checkbox" id="privatePost" name="privatePost" onclick="togglePasswordField()">
+                  <label for="private">비공개</label>
+               </div>
+            </div>
+			
+            <div class="flex_css">
+               <span class="width_box"><label for="title">제목</label></span>
+               <input type="text" id="title" name="title" required>
+            </div>
+		      
+            <div class="flex_css" style="height:120px;">
+               <span class="width_box"><label for="content">내용</label></span>
+               <textarea class="form-control" rows="5" id="content" name="content" required></textarea>
+            </div>
+			
+            <div class="flex_css">
+               <span class="width_box"><label for="password">비밀번호</label></span>
+               <input type="password" id="password" name="password" disabled>
+            </div>
+			
+		</form>
+	</div>
+	         
+	<div class="form-buttons">
+	   <button type="submit" class="btn btn-primary" onclick="submitForm()">작성완료</button>
+	   <button type="button" class="cancel-button" th:onclick="|window.location.href='/qna/list'|">목록으로</button>
+	</div>
+         
+      
+   </th:block>
+
+</th:block>
+
+<script>
+
+    // 비공개 체크박스를 선택하면 비밀번호 필드를 활성화하고 필수로 설정
+    function togglePasswordField() {
+        const privateCheckbox = document.getElementById("privatePost");
+        const passwordField = document.getElementById("password");
+
+        if (privateCheckbox.checked) {
+            passwordField.disabled = false;
+            passwordField.required = true;  // 비밀번호 필수 입력 설정
+        } else {
+            passwordField.disabled = true;
+            passwordField.required = false; // 비공개 체크 해제 시 비밀번호 입력 비활성화
+        }
+    }
+
+    // 폼 유효성 검사
+    function validateForm() {
+        const title = document.getElementById("title").value.trim();
+        const content = document.getElementById("content").value.trim();
+        const privateCheckbox = document.getElementById("privatePost").checked;
+        const password = document.getElementById("password").value.trim();
+
+        if (title === "") {
+            alert("제목을 입력해주세요.");
+            return false;
+        } else if (content === "") {
+            alert("내용을 입력해주세요.");
+            return false;
+        }
+
+        // 비공개 체크박스가 선택된 경우 비밀번호가 입력되었는지 확인
+        if (privateCheckbox && password === "") {
+            alert("비밀번호를 입력해주세요.");
+            return false;
+        }
+
+        return true;
+    }
+    
+    // 버튼 클릭 시 폼 제출 함수
+    function submitForm() {
+        const form = document.getElementById("qnaForm");
+        if (validateForm()) { // 유효성 검사가 통과된 경우에만 폼 제출
+            form.submit();
+        }
+    }
+    
+</script>
+
+
+
+
+
+
+

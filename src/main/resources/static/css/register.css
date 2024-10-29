@@ -1,0 +1,247 @@
+@charset "UTF-8";
+
+.memberBack {
+    position: relative; /* 자식 요소를 절대 위치로 배치하기 위해 필요 */
+    overflow: hidden; /* 자식 요소가 영역을 넘지 않도록 설정 */
+	z-index: 1;
+}
+
+.video-background-member {
+    position: absolute; /* 절대 위치로 설정 */
+    top: 50%;
+    left: 50%;
+    min-width: 100%; /* 최소 너비 100% */
+    min-height: 100%; /* 최소 높이 100% */
+    width: auto; /* 비디오 비율 유지 */
+    height: auto; /* 비디오 비율 유지 */
+    z-index: -1; /* 다른 콘텐츠 아래로 위치 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    overflow: hidden; /* 비디오가 영역을 넘지 않도록 설정 */
+    opacity: 0.3;
+}
+
+.member_sign, .login_box {
+	max-width: 500px;
+	height: auto;
+	background-color: #7e7e7e61;
+    padding: 30px 30px 0px 30px;
+    border-radius: 10px;
+    margin-top: -50px;
+    box-shadow: 3px 3px 0px #535353;
+}
+
+.login_box {
+	margin-top: 0px;
+}
+
+.sign_title {
+	font-size: 36px;
+	font-family: "Cormorant", serif;
+	font-optical-sizing: auto;
+	font-weight: 700;
+	font-style: normal;
+	letter-spacing: -4.5px;
+}
+
+.sign_text {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 12px;
+	letter-spacing: 10.0px;
+	padding: 0 2px 7px;
+	border-bottom: 1px solid white;
+}
+
+.sign_text div:nth-child(1) {
+	letter-spacing: 5.0px;
+}
+
+.sign_text div:nth-child(2) {
+	letter-spacing: 0.5px;
+}
+
+.sign_list, .member_login_data {
+    text-align: left;
+}
+
+.sign_list .list_text, .member_login_data .list_text {
+	width: 120px;
+	font-size: 14px;
+	text-align: left;
+	flex-shrink: 0;
+}
+
+.member_login_data {
+	margin-top: -50px;
+}
+
+.width_box {
+	display: inline-block;
+	width: 120px;
+}
+
+.sms_text {
+	font-size: 12px;
+}
+
+.flex_css {
+	display: flex;
+	align-items: center;
+	height: 35px;
+}
+
+.flex_css.noLabel {
+	height: 20px;
+}
+
+.flex_css.noLabel.btnLable {
+	padding: 2px 0;
+}
+
+.flex_css input[type="text"], .id_mini_container input[type="text"], .flex_css input[type="password"], .flex_css input[type="number"] {
+	flex-grow: 1;
+	max-width: 450px;
+    width: 100%;
+    box-sizing: border-box;
+} 
+
+.flex_css span.width_box {
+	display: inline;
+	width: 120px;
+}
+
+.flex_css.line_css {
+    border-bottom: 1px solid white;
+    padding-bottom: 7px;
+}
+
+.id_mini_container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.id_mini_container > div {
+	display: flex;
+}
+
+.add_text, .how_text {
+	font-size: 12px;
+}
+
+button#idBtn {
+	margin-right: 5px;
+	padding: 3px 8px;
+	border: none;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.button-container, .role_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.login_box .button-container {
+	padding: 20px;
+}
+
+.sign_list .button-container {
+	padding: 20px;
+} 
+
+.role_container.flex_css {
+	border-bottom: 1px solid white;
+    padding-bottom: 2px;
+}
+
+input#phone_ck, input#email_ck {
+    margin-left: 0px;
+}
+
+.essential_text {
+	color: #f7d756;
+}
+
+.role_container .form-check label {
+	font-size: 14px;
+}
+
+.error_mes {
+	text-align: center;
+	color: #ffffff;
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	border-top: 1px solid #ffffff;
+	border-bottom: 1px solid #ffffff;
+}
+
+.form-control {
+    background-color: transparent;
+    border-width: 0 0 1px 0;
+    border-color: #ffffff;
+	line-height: 21px;
+	color: #ffffff;
+	letter-spacing: 0.5px;
+}
+
+.form-control:focus {
+	outline:none;
+}
+
+.reg_link {
+	padding-bottom: 20px;
+	text-align: center;
+}
+
+.reg_link a {
+	position: relative;
+	color: #9c9c9c;
+	text-decoration: none;
+    display: inline-block;
+    padding: 5px 0;
+    transition: color 0.3s ease-in-out;
+    font-size: 14px;
+}
+
+.reg_link a:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background-color: #fff;
+    transition: width 0.3s ease-in-out;
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.reg_link a:hover::after {
+	width: 100%;
+	transform: scaleX(1);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff; /* 텍스트 색상 */
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset; /* 배경색을 투명으로 설정 */
+    box-shadow: 0 0 0px 1000px transparent inset; /* 배경색을 투명으로 설정 */
+    transition: background-color 5000s ease-in-out 0s; /* 배경색 전환 */
+}
+
+input:autofill,
+input:autofill:hover,
+input:autofill:focus,
+input:autofill:active {
+    -webkit-text-fill-color: #ffffff; /* 텍스트 색상 */
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset; /* 배경색을 투명으로 설정 */
+    box-shadow: 0 0 0px 1000px transparent inset; /* 배경색을 투명으로 설정 */
+    transition: background-color 5000s ease-in-out 0s; /* 배경색 전환 */
+}

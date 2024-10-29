@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+
+<th:block th:fragment="content">
+	
+
+	<section class="member_register">
+		<div class="view info_enter memberBack">
+		<video class="video-background-member" autoplay muted loop>
+			<source src="/images/pattMov.mp4" type="video/mp4"> <!-- MP4 형식도 추가 -->
+	    </video>
+		
+			<div class="member_sign">
+				<div class="sign_title">SIGN UP</div>
+				<div class="sign_text">
+					<div>회원가입</div>
+					<div>* 필수입력사항</div>
+				</div>
+				<div class="sign_list">
+					<form action="/register" method="post" onsubmit="return validateForm()">
+						<div class="id_container flex_css">
+							<label for="id" class="list_text essential_text">아이디 *</label>
+							<input type="text" class="form-control" name="id" id="id" onkeyup="roleAdminChange()">
+							<input type="hidden" id="idSameCk" value="">
+						</div>
+						<div class="id_container flex_css noLabel btnLable">
+							<span class="width_box"></span>
+							<button type="button" onclick="idUseCk()" id="idBtn">중복 확인</button>
+							<div class="idMessage add_text"></div>
+						</div>
+						<div class="id_container flex_css noLabel">
+							<span class="width_box"></span>
+							<span class="how_text">영문자와 숫자를 조합하여 6~20자 길이로 작성해주세요.</span>
+						</div>
+						<div class="password_container flex_css">
+							<label for="password" class="list_text essential_text">비밀번호 *</label>
+							<input type="password" class="form-control" name="password" id="password" onkeyup="checkPasswordMatch()">
+						</div>
+						<div class="password_container flex_css noLabel">
+							<span class="width_box"></span>
+							<span class="how_text">최소 8자 이상, 숫자, 대소문자, 특수문자를 조합하여 작성해주세요.</span>
+						</div>
+						<div class="password_container flex_css">
+							<label for="passwordCk" class="list_text essential_text">비밀번호 확인 *</label>
+							<input type="password" class="form-control" id="passwordCk" onkeyup="checkPasswordMatch()">
+						</div>
+						<div class="password_container flex_css noLabel hide_on pw_onoff">
+							<span class="width_box"></span>
+							<div class="pwMessage add_text"></div>
+						</div>
+						<div class="name_container flex_css">
+							<label for="name" class="list_text essential_text">이름 *</label>
+							<input type="text" class="form-control" name="name" id="name">
+						</div>
+						<div class="birthday_container flex_css">
+							<label for="birthday" class="list_text">생년월일</label>
+							<input type="number" class="form-control" name="birthday" placeholder="980505" id="birthday">
+						</div>
+						<div class="phone_container flex_css">
+							<label for="phone" class="list_text essential_text">연락처 *</label>
+							<input type="text" class="form-control" name="phone" placeholder="000-0000-0000" id="phone">
+						</div>
+						<div class="phone_container flex_css">
+							<label for="phone_ck" class="list_text">SMS 수신 여부</label>
+							<input type="checkbox" name="phoneCk" id="phone_ck" value="동의">
+							<span class="sms_text">[브랜드명]에서 제공하는 소식을 SMS로 받으실 수 있습니다.</span>
+						</div>
+						<div class="email_container flex_css">
+							<label for="email" class="list_text">이메일</label>
+							<input type="text" class="form-control" name="email" placeholder="escape@gmail.com" id="email">
+						</div>
+						<div class="email_container flex_css line_css">
+							<label for="email_ck" class="list_text">이메일 수신 여부</label>
+							<input type="checkbox" name="emailCk" id="email_ck" value="동의">
+							<span class="sms_text">[브랜드명]에서 제공하는 소식을 이메일로 받으실 수 있습니다.</span>
+						</div>
+						<div class="role_container flex_css hide_box">
+							<div class="form-check">
+								<!-- name과 value 속성 입력 -->
+								<input class="form-check-input"  type="radio" id="user" name="role" value="ROLE_USER" checked>
+								<label class="form-check-label" for="user">일반사용자</label>
+							</div>
+							<div class="form-check">
+								<!-- name과 value 속성 입력 -->
+								<input class="form-check-input" type="radio" id="admin" name="role" value="ROLE_ADMIN">
+								<label class="form-check-label" for="admin">관리자</label>
+							</div>
+						</div>
+						<div class="button-container">
+							<button type="submit" id="postBtn" class="notuseBtn">등록</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+		</div>
+	</section>
+
+	
+	<script th:inline="javascript">
+	
+		//HTML 문서가 로드될 때 이벤트 처리	
+		$(document).ready(function() {
+			//컨트롤러에서 전달한 에러메세지 저장
+			let msg = [[${msg}]];
+			
+			if(msg!=null){
+				alert(msg); //실패메세지 팝업
+			}
+		});
+
+		// 버튼 클릭 시 idUseCk() 중복 아이디 체크 
+	
+		function idUseCk() {
+			
+			// 아이디 값 호출
+			let userID = document.getElementById("id").value.trim();
+
+			// 아이디 중복 체크 데이터 저장용 히든 박스 호출
+			let idSameCk = document.getElementById("idSameCk");
+
+			// 오류, 승인 메시지 HTML
+			let message = document.querySelector(".idMessage");
+
+			// 아이디 입력 여부 확인
+			if (userID === "" || userID == null) {
+        alert("아이디를 입력하세요.");
+        return;
+			}
+
+			// 아이디 정규표현식 체크: 영문자+숫자 6~20자
+			const idPatt = /^[a-zA-Z0-9]{6,20}$/;
+
+			if (!idPatt.test(userID)) {
+				alert("아이디는 영문자와 숫자로 이루어진 6~20자의 길이여야 합니다.");
+				return;
+			}
+			
+			$.ajax({
+				type: "GET",
+				url: "/IDCheck?userid=" + userID,
+				success: function(response) {
+
+					alert(response); // 중복 여부를 알림창으로 표시
+
+					if (response == "사용 가능한 아이디입니다.") {
+						// HTML로 메시지 삽입
+						message.textContent = response;
+						// 식별용 클래스 추가
+						message.classList.add('useTestOk');
+						// 식별용 HIDDEN value 변경
+						idSameCk.value = userID;
+					} else if (response == "중복된 아이디입니다.") {
+						// HTML로 메시지 삽입
+						message.textContent = response;
+						// 식별용 HIDDEN value 변경
+						idSameCk.value = "";
+					}
+
+				},
+				error: function(xhr, status, error) {
+					console.error("AJAX 요청 실패:", status, error);
+				}
+			});
+			
+		}
+		
+		function checkPasswordMatch() {
+
+			// 비밀번호와 비밀번호 체크 호출
+			let pw = document.getElementById("password").value;
+			let pwCk = document.getElementById("passwordCk").value;
+
+			// 오류, 승인 메시지 HTML
+			let message = document.querySelector(".pwMessage");
+
+			let pwOnBox = document.querySelector(".pw_onoff");
+
+			if (pwCk) {
+				pwOnBox.classList.remove("hide_on");
+			}
+
+			// 비밀번호가 일치하지 않을 경우
+			if (pw != pwCk) {
+				// HTML로 메시지 삽입
+				message.textContent = "비밀번호가 일치하지 않습니다.";
+			}
+
+			// 비밀번호가 일치할 경우
+			if (pw == pwCk) {
+				message.textContent = "비밀번호가 일치합니다.";
+				message.classList.add('useTestOk');
+			}
+
+		}
+
+		// 필수 입력값이 채워져야만 회원 가입 가능
+		function validateForm() {
+			
+			let userID = document.getElementById("id").value;
+			let idMessage = document.querySelector(".idMessage");
+			let idSameCk = document.getElementById("idSameCk").value;
+			let pw = document.getElementById("password").value;
+			let pwCk = document.getElementById("passwordCk").value;
+			let pwMessage = document.querySelector(".pwMessage");
+			let name = document.getElementById("name").value;
+			let birthday = document.getElementById("birthday").value;
+			let phone = document.getElementById("phone").value;
+			let email = document.getElementById("email").value;
+			
+			let btn = document.getElementById("postBtn");
+
+			if (!userID) {
+				alert("아이디를 입력하세요.");
+				return false;
+			}
+
+			// 아이디 정규표현식 체크: 영문자+숫자 6~20자
+			const idPatt = /^[a-zA-Z0-9]{6,20}$/;
+
+			if (!idPatt.test(userID)) {
+				alert("아이디는 영문자와 숫자로 이루어진 6~20자의 길이여야 합니다.");
+				return false;
+			}
+			
+			if (userID && !idMessage.classList.contains('useTestOk') || userID != idSameCk) {
+				alert("사용 가능한 아이디인지 확인하세요.");
+				return false;
+			}
+
+			if (!idMessage.classList.contains('useTestOk')) {
+				alert("사용할 수 없는 아이디입니다.");
+				return false;
+			}
+
+			if (!pw) {
+				alert("비밀번호를 입력하세요.");
+				return false;
+			}
+
+			// 비밀번호 정규 표현식 체크
+			const pwPatt = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+			if (!pwPatt.test(pw)) {
+				alert("비밀번호는 최소 8자 이상, 숫자, 대소문자, 특수문자 1개 이상 포함해야 합니다.");
+				return false;
+			}
+			
+			if (!pwCk || pw && !pwMessage.classList.contains('useTestOk') || pw != pwCk) {
+				alert("비밀번호를 재확인해주세요.");
+				return false;
+			}
+
+			if (!pwMessage.classList.contains('useTestOk')) {
+				alert("비밀번호가 일치하지 않습니다.");
+				return false;
+			}
+
+			if (!name) {
+				alert("이름을 입력해주세요.");
+				return false;
+			}
+			
+			// 이름 정규표현식 체크
+			const namePatt = /^[가-힣a-zA-Z]{2,30}$/;
+
+			if (!namePatt.test(name)) {
+					alert("이름은 한글 또는 영문자, 2~30자의 길이여야 합니다.");
+					return false;
+			}
+
+			if (birthday) {
+
+				// 생일 정규표현식 체크
+				const birthPatt = /^\d{2}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+
+				if (!birthPatt.test(birthday)) {
+					alert("생년월일을 올바르게 입력해주세요.");
+					return false;
+				}
+
+			}
+
+			if (!phone) {
+				alert("연락처를 입력해주세요.");
+				return false;
+			}
+
+			// 연락처 정규표현식 체크: 000-0000-0000 형식
+			const phonePatt = /^\d{3}-\d{4}-\d{4}$/;
+
+			if (!phonePatt.test(phone)) {
+				alert("연락처 형식이 올바르지 않습니다. 000-0000-0000 형식으로 입력해주세요.");
+				return false;
+			}
+
+			if (email) {
+
+				// 이메일 정규표현식 체크
+				const emailPatt = /^([a-zA-Z]+\d*)+(\.?\w+)+@\w+(\.\w{2,3})+$/;
+
+				if (!emailPatt.test(email)) {
+					alert("이메일을 올바르게 입력해주세요.");
+					return false;
+				}
+
+			}
+			
+			return true;
+
+		}
+		
+		// 필수 입력값이 입력되면 버튼 디자인 변경(클래스 추가)
+		document.addEventListener("DOMContentLoaded", function() {
+			
+			let userID = document.getElementById("id");
+			let pw = document.getElementById("password");
+			let pwCk = document.getElementById("passwordCk");
+			let name = document.getElementById("name");
+			let phone = document.getElementById("phone");
+			
+			const btn = document.getElementById("postBtn");
+
+			function checkFields() {
+
+				// 모든 필드가 비어 있지 않으면 버튼에 useBtn 클래스 추가
+				if (userID.value && pw.value && pwCk.value && name.value && phone.value && pw.value === pwCk.value) {
+					btn.classList.add("useBtn");
+					btn.classList.remove("notuseBtn");
+					
+				} else {
+					btn.classList.add("notuseBtn");
+					btn.classList.remove("useBtn");
+				}
+
+			}
+
+			// 입력 필드마다 이벤트 리스너 추가
+			userID.addEventListener("input", checkFields);
+			pw.addEventListener("input", checkFields);
+			pwCk.addEventListener("input", checkFields);
+			name.addEventListener("input", checkFields);
+			phone.addEventListener("input", checkFields);
+			
+		});
+		
+		function roleAdminChange() {
+			
+			let userID = document.getElementById("id");
+			let roleBox = document.querySelector(".role_container");
+
+			let adminCk = "관리자등록";
+
+			if (userID.value == adminCk) {
+				roleBox.classList.remove("hide_box");
+			}
+			
+		}
+		
+	</script>
+
+</th:block>
+
+</th:block>
+
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<th:block th:fragment="setContent(content)"> <!-- 파라미터로 조각코드 받기 -->
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- 오픈 그래프 -->
+	<!-- 웹페이지가 소셜미디어(페이스북, 카톡 등)로 공유될 때 우선적으로 활용되는 정보 -->
+<!--
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Escape Room">
+	<meta property="og:title" content="Project_EscapeRoom">
+	<meta property="og:description" content="이스케이프룸 홈페이지 구현 프로젝트입니다.">
+	<meta property="og:image" content="/images/Logo_W.svg">
+	<meta property="og:url" content="https://main--sons4t4ng.netlify.app/"> -->
+
+	<!-- 트위터 카드 -->
+	<!-- 웹페이지가 소셜미디어(트위터)로 공유될 때 우선적으로 활용되는 정보 -->
+<!--
+	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:site" content="Escape Room" />
+	<meta property="twitter:title" content="Project_EscapeRoom" />
+	<meta property="twitter:description" content="이스케이프룸 홈페이지 구현 프로젝트입니다." />
+	<meta property="twitter:image" content="/images/Logo_W.svg" />
+	<meta property="twitter:url" content="https://링크.netlify.app/" /> -->
+	
+	<title>Escape Room</title>
+	
+	<link rel="icon" type="image/svg" sizes="16x16" href="/images/Logo_W.svg">
+
+	<!-- CSS 초기화 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css">
+
+	<!-- Swiper -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+	<!-- CSS -->
+	<link href="/css/style.css" rel="stylesheet">
+	<link href="/css/main.css" rel="stylesheet">
+	<link href="/css/register.css" rel="stylesheet">
+	<link href="/css/read.css" rel="stylesheet">
+	<link href="/css/list.css" rel="stylesheet">
+	<link href="/css/theme.css" rel="stylesheet">
+	<link href="/css/qna.css" rel="stylesheet">
+	<link href="/css/qna/read.css" rel="stylesheet">
+	<link href="/css/qna/register.css" rel="stylesheet">
+	<link href="/css/qna/modify.css" rel="stylesheet">
+
+	<!-- JS 라이브러리 추가 -->
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+	<!-- FONT -->
+	<!-- 영문 세리프 -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+
+	<!-- Material Icon -->
+		<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body>
+
+	<header>
+		<div class="main_top">
+		<div class="logo">
+			<a href="/">
+				<img src="/images/Logo_B.svg" alt="이스케이프룸 로고">
+			</a>
+		</div>
+		<nav>
+			<ul sec:authorize="isAnonymous() or hasAnyRole('ROLE_USER')">
+				<li><a href="/theme/theme-list">테마</a></li>
+				<li><a href="/reservation/list">예약하기</a></li>
+				<li><a href="/qna/list">Q&A</a></li>
+				<li><a href="/spot/spot">지점 안내</a></li>
+				
+				<!-- 로그인, 회원가입은 로그인하지 않은 사용자에게만 노출 -->
+				<li sec:authorize="isAnonymous()"><a href="/register">회원가입</a></li>
+				<li sec:authorize="isAnonymous()"><a href="/escapelogin">로그인</a></li>
+				<!-- 마이페이지, 로그아웃은 로그인한 사용자에게만 노출  -->
+				<li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')"><a th:href="@{/mypage(id=${#authentication.name})}">마이페이지</a></li>
+				<li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')"><a href="/logout">로그아웃</a></li>
+			</ul>
+
+			<ul sec:authorize="hasAnyRole('ROLE_ADMIN')">
+				<li><a href="/theme/theme-list">테마</a></li>
+				<li><a href="/reservation/inventory">예약 목록</a></li>
+				<li><a href="/qna/list">Q&A</a></li>
+				<li><a href="/spot/spot">지점 안내</a></li>
+				<!-- 마이페이지, 로그아웃은 로그인한 사용자에게만 노출  -->
+				<li><a href="/member/list">관리자 페이지</a></li>
+				<li><a href="/logout">로그아웃</a></li>
+			</ul>
+		</nav>
+		</div>
+	
+		<!-- 슬라이드 메뉴 -->
+		<label>
+			<input type='checkbox'>
+			<span class='menu'>
+				<span class='hamburger'></span>
+			</span>
+
+			<div class="slide-menu">
+				<img src="/images/menu-bg.png" alt="theme-bg">
+				<ul class="vertical-menu hidden" sec:authorize="isAnonymous() or hasAnyRole('ROLE_USER')">
+					<li><a href="/theme/theme-list">Theme</a>
+							<p>테마안내</p>
+					</li>
+					<li><a href="/reservation/list">Reservation</a>
+						<p>예약</p>
+					</li>
+					<li><a href="/qna/list">Q&A</a>
+						<p>문의게시판</p>
+					</li>
+					<li><a href="/spot/spot">Spot</a>
+						<p>지점안내</p>
+					</li>
+				
+					<!-- 로그인, 회원가입은 로그인하지 않은 사용자에게만 노출 -->
+					<li sec:authorize="isAnonymous()"><a href="/register">Join</a>
+						<p>회원가입</p>
+					</li>
+					<li sec:authorize="isAnonymous()"><a href="/escapelogin">Login</a>
+						<p>로그인</p>
+					</li>
+					<!-- 마이페이지, 로그아웃은 로그인한 사용자에게만 노출  -->
+					<li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')"><a th:href="@{/mypage(id=${#authentication.name})}">마이페이지</a></li>
+					<li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')"><a href="/logout">로그아웃</a></li>
+				</ul>
+				
+				<ul class="vertical-menu" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+					<li><a href="/theme/theme-list">Theme</a>
+						<p>테마목록</p>
+					</li>
+					<li><a href="/reservation/inventory">Inventory</a>
+							<p>예약 목록</p>
+					</li>
+					<li><a href="/qna/list">Q&A</a>
+							<p>문의게시판</p>
+					</li>
+					<li><a href="/spot/spot">Spot</a>
+							<p>지점안내</p>
+					</li>
+					<!-- 마이페이지, 로그아웃은 로그인한 사용자에게만 노출  -->
+					<li><a href="/member/list">Admin</a>
+							<p>관리자 페이지</p>
+					</li>
+					<li><a href="/logout">LogOut</a>
+							<p>로그아웃</p>
+					</li>
+				</ul>
+			</div>
+				</label>
+		<div class="black_header"></div>
+	</header>
+	
+	<div class="deco_box"></div>
+	
+	<video class="video-background" autoplay muted loop>
+		<source src="/images/backPattMov.mp4" type="video/mp4"> <!-- MP4 형식도 추가 -->
+		</video>
+	
+	<div class="menu-btn-container container-hidden">
+			<ul class="menu-btn-nav">
+				<li><a href="/theme">테마</a></li>
+				<li><a href="">예약하기</a></li>
+				<li><a href="">Q&A</a></li>
+				<li><a href="">지점 안내</a></li>
+				<li><a href="/register">마이페이지</a></li>
+		</ul>
+	 </div>
+
+	<div class="main_wrapper">
+		<!-- Page content-->
+		<div class="container-fluid">
+			<th:block th:replace="${content}"></th:block>
+			<!-- 전달받은 파라미터 사용하기 -->
+		</div>
+	</div>
+
+	<footer>
+		<div class="main_bottom">
+			<ul class="footer_text">
+				<li>테마 안내</li>
+				<li>자주 묻는 질문</li>
+				<li>개인정보취급방침</li>
+			</ul>
+			<div class="footer_text_mini">
+				<div>
+					<span>상호명 | 이스케이프룸</span>
+					<span>지점 | 홍대, 인천구월, 서면</span>
+				</div>
+				<div>
+					<span>(주)회사컴퍼니</span>
+					<span>대표전화 | 1800.0000</span>
+					<span>Email | escaperoom@company.com</span>
+				</div>
+				<div>
+					<span>Copyright ⓒ Project. Escape-Room. All rights reserved.</span>
+				</div>
+			</div>
+		</div>
+	</footer> 
+	
+	<script>
+	// $(document).ready(function() {
+	// 	  $('.material-symbols-outlined').on('click', function() {
+	// 	    // 클래스 'menu-icon'과 'close-icon'을 토글
+	// 	    $(this).toggleClass('menu-icon close-icon');
+				
+	// 	    // 클래스에 따라 아이콘 텍스트 변경
+	// 	    if ($(this).hasClass('menu-icon')) {
+	// 	      $(this).text('menu');
+	// 		  $('.menu-btn-container').addClass('container-hidden');
+	// 	    } else {
+	// 	      $(this).text('close');
+	// 		  $('.menu-btn-container').removeClass('container-hidden');
+	// 	    }
+	// 	  });
+	// 	});
+
+	$(document).ready(function() {
+		$("label input").change(function() {
+			if ($(this).is(":checked")) {
+				$(".vertical-menu").removeClass("hidden");
+			} else {
+				$(".vertical-menu").addClass("hidden");
+			}
+		});
+	});
+
+	</script>
+</body>
+
+</th:block>
+
+</html>

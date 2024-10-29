@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}"> <!-- 파라미터로 조각코드 받기 -->
+
+   <th:block th:fragment="content">
+   
+      <div class="content-header">
+         <div class="cormorant-font">Q&A</div>
+         <p class="p_text_deco">질문과 답변</p>
+      </div>
+      
+      <!-- 비밀번호 입력이 필요한 경우 -->
+      <div th:if="${passwordRequired}" class="password-container">
+          <form action="/qna/read" method="get">
+              <input type="hidden" name="no" th:value="${dto.no}">
+              <input type="hidden" name="page" th:value="${page}">
+              <div class="form-group">
+                  <input type="password" id="password" name="password" class="form-control" required placeholder="PASSWORD">
+              </div>
+              <div class="button-group">
+                   <button type="submit" class="btn btn-primary">확인</button>
+                   <button type="button" class="cancel-button" th:onclick="|window.location.href='/qna/list'|">목록으로</button>
+              </div>
+          </form>
+      </div>
+		
+      <!-- 본문 내용 (비밀번호가 맞거나 공개 게시글인 경우에만 보여짐) -->
+      <div class="read_div" th:unless="${passwordRequired}">
+          <div class="form-group">
+              <div class="title-container">
+                   <!-- 제목 -->
+                   <span th:text="${dto.title}" class="qna-title"></span>
+                    <span th:if="${dto.answer == true}" class="qna-comment">[답변완료]</span>
+              </div>
+              <div class="info-container">
+                  <div class="writer-info">
+                      <span>작성자:</span>
+                      <span th:text="${dto.member.name}" class="qna-writer"></span>
+                  </div>
+                  <div class="qna-date">
+                      <span>등록일:</span>
+                      <span th:text="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                  </div>
+              </div>
+          </div>
+      
+          <!-- 내용 -->
+          <div th:text="${dto.content}" class="qna-content"></div>
+         
+      <!-- 수정/삭제 버튼: 본인 게시글이거나 관리자일 경우에만 보임 -->
+      <div class="button-group">
+          <a th:if="${isWriter} or ${isAdmin}" th:href="@{/qna/modify(no = ${dto.no})}">
+              <button type="button" class="btn btn-primary">수정</button>
+          </a>
+          <form th:if="${isWriter} or ${isAdmin}" th:action="@{/qna/remove(no=${dto.no})}" method="post" style="display:inline;" id="deleteForm">
+              <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제</button>
+          </form>
+          <button type="button" class="cancel-button" th:onclick="|window.location.href='/qna/list'|">목록으로</button>
+      </div>
+      
+      	<!-- 댓글 -->
+		<div th:unless="${passwordRequired}" class="card shadow mb-4">
+		    <div class="card-header py-3">
+		        <h6 class="m-0 font-weight-bold text-primary">COMMENT</h6>
+		    </div>
+		    <div class="card-body" id="commentdiv"></div>
+		    <div class="card-body comment-input-container" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+		        <textarea class="form-control comment-input" id="commentContent" rows="3"></textarea>
+		        <button type="button" class="btn btn-secondary comment-button" onclick="registerComment()">댓글등록</button>
+		    </div>
+		</div>
+      	<!-- 댓글 끝 -->
+
+
+        <!-- 댓글 이벤트 처리 -->
+       <script th:inline="javascript">
+    // 관리자 여부 확인
+    const isAdmin = [[${isAdmin}]];
+
+    function confirmDelete() {
+        if (confirm('정말로 삭제하시겠습니까?')) {
+            document.getElementById('deleteForm').submit();
+        }
+    }
+
+    // 페이지 로드 시 showComment 함수를 호출하여 댓글 목록을 출력
+    document.addEventListener("DOMContentLoaded", () => {
+        showComment();
+    });
+
+    function showComment() {
+        var board = [[${dto}]];
+        let comment_div = document.getElementById('commentdiv');
+
+        $.ajax({
+            type: "GET",
+            url: "/comment/list?boardNo=" + board.no,
+            success: function(response) {
+                if (response) {
+                    comment_div.innerHTML = ''; // 기존 댓글 제거
+                    let commentlist = response;
+
+                    for (let i = 0; i < commentlist.length; i++) {
+                        let comment = commentlist[i];
+
+                        // 댓글 항목을 감싸는 div 생성
+                        let commentItem = document.createElement('div');
+                        commentItem.className = 'comment-item';
+
+                        // 작성자 표시 div 생성
+                        let writerDiv = document.createElement('div');
+                        writerDiv.className = 'comment-author';
+                        writerDiv.textContent = comment.id; // 작성자 이름
+
+                        // 댓글 내용 표시 div 생성
+                        let contentDiv = document.createElement('div');
+                        contentDiv.className = 'comment-content';
+                        contentDiv.textContent = comment.content; // 댓글 내용
+
+                        // commentItem에 작성자, 내용 추가
+                        commentItem.appendChild(writerDiv);
+                        commentItem.appendChild(contentDiv);
+
+                        // comment_div에 commentItem 추가
+                        comment_div.appendChild(commentItem);
+                        
+                     // 관리자일 경우에만 삭제 버튼 추가
+                        if (isAdmin) {
+                            let deleteBtn = document.createElement('a');
+                            deleteBtn.href = 'javascript:removeComment(' + comment.commentNo + ')';
+                            deleteBtn.textContent = '삭제';
+                            deleteBtn.className = 'comment-delete-btn';
+                            commentItem.appendChild(deleteBtn);
+                        }
+                    }
+                }
+            },
+            error: function(err) {
+                console.error("댓글 목록 로드 실패:", err);
+            }
+        });
+    }
+
+    function registerComment() {
+        var board = [[${dto}]];
+        let commentContent = document.getElementById("commentContent");
+        let commentDto = {
+            'boardNo': board.no,
+            'content': commentContent.value
+        };
+        $.ajax({
+            type: "POST",
+            url: "/comment/register",
+            data: commentDto,
+            success: function(response) {
+                if (response) {
+                    commentContent.value = null;
+                    showComment();
+                }
+            }
+        })
+    }
+
+    function removeComment(commentNo) {
+        $.ajax({
+            type: "DELETE",
+            url: "/comment/remove?commentNo=" + commentNo,
+            success: function(response) {
+                if (response) {
+                    showComment();
+                }
+            }
+        });
+    }
+</script>
+   
+   </th:block>
+
+</th:block>
+
+
+
+
+
+
+

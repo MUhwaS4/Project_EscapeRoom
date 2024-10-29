@@ -1,0 +1,314 @@
+@charset "UTF-8";
+
+html {
+	scroll-behavior: smooth; /* 스크롤을 부드럽게 이동하도록 설정 */
+}
+
+section {
+	width: 100%;
+}
+
+.main_wrapper {
+	width: 97%;
+	background-color: #1a1a1a;
+	color: #ffffff;
+	box-shadow: 0px 0px 5px #7a7a7ab3;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+section.main_home {
+	background-color: #1a1a1a;
+	color: #ffffff;
+	/* 배경 패턴 */
+	background:
+		linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+		linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+		linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+		linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+		linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+		linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+	background-color: #131313;
+	background-size: 20px 20px;
+}
+
+section > div.view {
+	width: 100%;
+	margin: 0 auto;
+	/* height: 800px; */
+	height: 80vh;
+	padding: 100px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+section > div.viewBack:nth-child(1) {
+	background-image: url("/images/Artboard-gif.gif");
+	background-size: auto 100%;  /* 세로를 기준으로 100%, 가로는 비율에 맞게 자동 조정 */
+	background-position: center; /* 필요시 이미지를 가운데로 정렬 */
+	background-repeat: no-repeat; /* 반복을 원하지 않으면 사용 */
+	background-color: #1a1a1a;
+	position: relative;
+}
+
+section > div.viewBack.main > .black_box {
+	background:
+		linear-gradient(to top,
+		rgb(26 26 26 / 0%) 5%,
+		rgb(26 26 26 / 25%) 25%,
+		rgb(26 26 26 / 50%) 50%,
+		rgb(26 26 26 / 75%) 75%,
+		rgb(26 26 26) 100%);
+	z-index: 10;
+	width: 100%;
+	height: 150px;
+	position: absolute;
+	bottom: -150px;
+}
+
+.view.banner_theme {
+	color: #ffffff;
+}
+
+/* 테마 갤러리 형식 */
+
+.img-gallery {
+	width: 80%;
+	max-width: 1500px;
+	height: auto;
+	overflow: hidden;
+	padding: 50px 0px;
+	margin: 0 auto;
+}
+
+.swiper-slide {width: 250px; margin: 20px; height: 380px;}
+
+.swiper-slide {
+	position: relative;
+	width: 250px; 
+	margin: 20px; 
+	height: 380px;
+	background: linear-gradient(to bottom, #000000 15%,#1a1a1a 100%);
+}
+
+.swiper-slide.fade + .swiper-slide img {
+	opacity: 0.3;
+}
+
+.swiper-slide img {
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
+	transition: 0.5s;
+}
+
+.swiper-content.none {
+	display: none;
+	transition: 0.5s;
+}
+
+.swiper-content {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	color: #ffffff;
+}
+
+
+.swiper-content .theme-title {
+	padding: 20px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.swiper-content .theme-synop {
+	background: rgba(0, 0, 0, 0.3);
+	border: 1px solid #303030;
+	padding: 10px;
+	width: 80%;
+	height: 220px;
+	color: #ffffff;
+	resize: none;
+	font-size: 14px;
+	overflow: auto;
+	line-height: 24px;
+	border-radius: 5px;
+	word-break: keep-all;
+}
+
+.swiper-content .theme-etc {
+	width: 100%;
+	margin-top: 10px;
+	font-size: 14px;
+	text-align: left;
+	line-height: 20px;
+}
+
+.swiper-content .theme-etc p,.swiper-content .theme-etc div {
+	padding: 0 20px;
+}
+
+.swiper-content .theme-etc div:last-child {
+	padding-bottom: 20px;
+}
+
+.navigation-wrapper {
+	max-width: 1500px;
+	width: 80%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	position: absolute;
+	margin-top: -260px;
+}
+
+.swiper-button-next, .swiper-button-prev {
+	color: #ffffff;
+}
+
+.viewBack, .memberBack {
+	display: flex;
+		justify-content: center; /* 수평 중앙 정렬 */
+		align-items: center; /* 수직 중앙 정렬 */
+		height: auto;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+}
+
+.t_event {
+	margin: 30px 0;
+}
+
+.tr_event {
+	border-top: 1px;
+	border-bottom: 1px;
+	border-color: white;
+	border-style: solid;
+	margin: 5px 0;
+	display: table;
+	width: 100%;
+}
+
+.tr_event > td {
+	padding: 25px;
+	background-color: black;
+}
+
+.tr_event > td:nth-child(1) {
+	width: 25%;
+}
+
+.tr_event > td:nth-child(2) {
+	width: 75%;
+	min-width: 400px;
+}
+
+.form-group .search_btn {
+	font-size: 16px;
+		padding: 5px;
+		border-radius: 15px;
+		width: 200px;
+		margin: 0 auto;
+		font-weight: 900;
+		line-height: 30px;
+		background-color: #1a1a1a;
+}
+
+.select_text {
+	display: block;
+	padding: 10px 0;
+}
+
+#point_selection, #date_selection, .search_btn {
+	margin-bottom: 40px;
+}
+
+.view.banner_notice .mini_text div:nth-child(1) {
+	font-size: 24px;
+}
+
+.view.banner_notice .mini_text div:nth-child(2) {
+	font-size: 11px;
+	letter-spacing: 20px;
+	margin-left: 20px;
+	text-align: center;
+}
+
+.view.banner_notice table {
+	width: 80%;
+	max-width: 1200px;
+	height: auto;
+	margin: 50px 0 0;
+	border-spacing: 10px;
+	border-collapse: separate;
+}
+
+.view.banner_notice table tr th > img {
+	width: 220px;
+	height: auto;
+}
+
+.view.banner_notice table tr td {
+	padding: 20px 30px;
+	word-break: keep-all;
+}
+
+.view.banner_notice table tr.notion_text td {
+	padding: 20px 60px 30px;
+	line-height: 2vh;
+	font-size: 20px;
+	font-weight: 600;
+	border-bottom: 1px solid #ffffff;
+}
+
+.view.banner_notice table tr.many_text td {
+	padding: 20px 60px;
+	line-height: 2vh;
+	font-size: 14px;
+}
+
+.view .banner_text {
+	font-family: 'Pretendard-Regular', sans-serif;
+}
+
+.view .banner_text div {
+	padding: 8px 0;
+}
+
+.view .banner_text div:nth-child(1) {
+	font-size: 14px;
+	padding: 5px 0;
+}
+
+.view .banner_text div:nth-child(2) {
+	font-size: 50px;
+	font-family: "Cormorant", serif;
+	font-optical-sizing: auto;
+	font-weight: 700;
+	font-style: normal;
+	letter-spacing: -4.5px;
+	padding: 0px 0px 20px 0;
+}
+
+.view .banner_text div:nth-child(3) {
+	font-size: 20px;
+}
+
+.view .banner_text div:nth-child(4) {
+	font-size: 15px;
+}
+
+.view .banner_text div:nth-child(5) {
+	font-size: 11px;
+}

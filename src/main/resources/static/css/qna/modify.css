@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+.register-box {
+    background-color: rgba(126, 126, 126, 0.38);
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 760px;
+    height: 100%;
+    min-height: 300px;
+    margin: 0 auto;
+    margin-top: 20px;
+    box-shadow: 3px 3px 0px #535353;
+    color: #eee;
+}
+
+.content-header .cormorant-font {
+    font-size: 36px;
+    font-family: "Cormorant", serif;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: -4.5px;
+}
+
+.flex_css {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.width_box {
+    flex: 0 0 120px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.flex_css label {
+    width: 120px;
+    font-weight: bold;
+    margin-right: 15px;
+    font-size: 14px; 
+    color: #fff;
+}
+
+.flex_css input[type="text"],
+.flex_css textarea,
+.flex_css input[type="password"] {
+    flex: 1;
+    max-width: 600px;
+    padding: 8px;
+    font-size: 14px;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #eee;
+    color: #eee;
+    outline: none;
+    box-sizing: border-box;
+    resize: none;
+}
+
+.flex_css textarea {
+    height: 100px;
+    resize: none;
+}
+
+.private-container {
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+}
+
+.private-container label {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+}
+

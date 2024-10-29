@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+
+<th:block th:fragment="content">
+
+	<section class="member_login">
+		<div class="view login_page memberBack">
+		<video class="video-background-member" autoplay muted loop>
+			<source src="/images/pattMov.mp4" type="video/mp4"> <!-- MP4 형식도 추가 -->
+	    </video>
+		
+			<div class="member_login_data">
+				<form action="/login" method="POST">
+					<div th:if="${param.error!=null}">
+						<div class="error_mes">
+							사용자ID 또는 비밀번호를 확인해 주세요!
+						</div>
+		            </div>
+					<div class="login_box">
+						<div class="id_container flex_css">
+							<label for="username" class="list_text login_input">아이디</label>
+							<input type="text" class="form-control" name="username" id="username">
+						</div>
+						<div class="password_container flex_css">
+							<label for="password" class="list_text login_input">비밀번호</label>
+							<input type="password" class="form-control" name="password" id="password">
+						</div>
+						<div class="button-container">		            
+							<button type="submit">LOGIN</button>
+						</div>
+						<div class="reg_link">
+							<a class="btn btn-secondary" href="/register">회원가입</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		
+		</div>
+	</section>
+
+</th:block>
+
+</th:block>
+
+</html>

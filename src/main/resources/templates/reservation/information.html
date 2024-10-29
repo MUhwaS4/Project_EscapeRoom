@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<head>
+	<title>
+		예약등록 - 정보입력
+	</title>
+</head>
+<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}">
+<th:block th:fragment="content">
+
+	<link rel="stylesheet" href="/css/reservation/information.css">
+    
+    <section class="member_login">
+	    <div class="view reservation_list">
+	    
+		<div class="content-header">
+			<div class="cormorant-font">Reservation</div>
+			<p class="p_text_deco">예약 정보 입력</p>
+		</div>
+	    
+	    <div class="container">
+	    <div>
+	        <div class="form-group">
+	            <label for="selectedTheme">🔑 선택한 테마</label>
+	            <input type="text" class="form-control" id="selectedTheme" name="selectedTheme" readonly th:value="${selectedTheme}">
+	        </div>
+	
+	        <div class="form-group">
+	            <label for="reservationDate">🔑 예약 날짜</label>
+	            <input type="date" class="form-control" id="reservationDate" name="reservationDate" readonly th:value="${reservationDate}">
+	        </div>
+	        
+	        <div class="form-group">
+	            <label for="selectedTime">🔑 예약 시간</label>
+	            <input type="text" class="form-control" id="time" name="selectedTime" readonly th:value="${selectedTime}">
+	        </div>
+	
+	        <div class="form-group">
+	            <label for="spot">🔑 지점 선택</label>
+	            <input type="text" class="form-control" id="spot" name="spot" readonly th:value="${spot}">
+	        </div>
+	
+	<div class="form-group">
+	            <label for="people">🔑 인원 수</label>
+	            <select class="form-control" id="people" name="people" required onchange="calculateAmount()">
+	                <option value="" disabled selected>인원 수 선택</option>
+	                <option value="2">2명</option>
+	                <option value="3">3명</option>
+	                <option value="4">4명</option>
+	                <option value="5">5명</option>
+	                <option value="6">6명</option>
+	            </select>
+	        </div>
+	
+	        <div class="form-group">
+	            <label for="amount">🔑 결제 금액</label>
+	            <input type="text" class="form-control" id="amount" name="amount" readonly>
+	        </div>
+			
+			<div class="res_btn">
+	        	<button onclick="insertReservationInfo()" class="btn btn-primary">예약하기</button>
+	        </div>
+	        
+	        <div class="res_link">
+	            <a class="btn btn-secondary" th:href="@{/reservation/list}">이전으로 돌아가기</a>
+	        </div>
+	    </div>
+		
+		</div>
+	
+		</div>
+	</section>
+	
+</div>
+
+<script>
+	/**
+	 * POST 요청을 처리하는 공통 함수
+	 * @param {string} url - 요청할 URL
+	 * @param {Object} data - 서버에 전송할 데이터 (JSON 형식)
+	 * @param {Function} onSuccess - 요청이 성공했을 때 호출될 콜백 함수
+	 * @param {Function} onError - 요청이 실패했을 때 호출될 콜백 함수
+	 */
+	async function postData(url, data, onSuccess, onError) {
+	    try {
+	        const response = await fetch(url, {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	            },
+	            body: JSON.stringify(data), // 데이터를 JSON으로 변환하여 전송
+	        });
+	
+	        if (response.ok) {
+	            if (onSuccess) {
+	                onSuccess(response); // 성공 시 콜백 함수 호출
+	            }
+	        } else {
+	            throw new Error(`Error: ${response.status}`);
+	        }
+	    } catch (error) {
+	        console.error('POST 요청 에러:', error);
+	        if (onError) {
+	            onError(error); // 실패 시 콜백 함수 호출
+	        }
+	    }
+	}
+	
+	 /*인원수에 따은 결제 금액 */
+    function calculateAmount() {
+        const people = document.getElementById('people').value;
+        const pricePerPerson = 22000; // <- 하드코딩 지양
+        if (people) {
+            const amount = people * pricePerPerson;
+            document.getElementById('amount').value = amount + "원";
+        }
+    }
+	
+	function insertReservationInfo() {
+		/* 변수 선언 */
+		var url = '/reservation/information'
+		
+		var selectedTheme = document.querySelector('#selectedTheme').value;
+		var reservationDate = document.querySelector('#reservationDate').value;
+		var spot = document.querySelector('#spot').value;
+		var people = document.querySelector('#people').value;
+		var amount = document.querySelector('#amount').value;
+		var time = document.querySelector('#time').value;
+		
+		var data = {
+				selectedTheme : selectedTheme
+				, reservationDate : reservationDate
+				, spot : spot
+				, people : people
+				, amount : amount
+				, time : time.replaceAll(' ', '')
+		}
+		
+		
+		/* 유효성 검증 */
+		if(people == '' || people == null){
+			alert("인원수를 입력해주세요");
+			return;
+		}
+		postData(url, data, fn_success, fn_fail);
+		
+		function fn_success(){
+			alert("예약되었습니다.");
+			
+			// 예약 성공 시 페이지 이동
+	        window.location.href = "http://localhost:8080/theme/theme-list";
+		}
+		
+		function fn_fail(){
+			alert("로그인이 필요합니다.");
+			 window.location.href  = "http://localhost:8080/escapelogin";
+		}
+		
+	}
+	
+    function confirmReservation() {
+        alert("예약이 완료되었습니다.");
+        return true;
+    }
+    
+    
+</script>
+    
+</th:block>
+</th:block>
