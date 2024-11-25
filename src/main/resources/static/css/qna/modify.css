@@ -22,7 +22,7 @@
     letter-spacing: -4.5px;
 }
 
-.flex_css {
+.flex_css_q {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
@@ -34,7 +34,7 @@
     color: #fff;
 }
 
-.flex_css label {
+.flex_css_q label {
     width: 120px;
     font-weight: bold;
     margin-right: 15px;
@@ -42,9 +42,9 @@
     color: #fff;
 }
 
-.flex_css input[type="text"],
-.flex_css textarea,
-.flex_css input[type="password"] {
+.flex_css_q input[type="text"],
+.flex_css_q textarea,
+.flex_css_q input[type="password"] {
     flex: 1;
     max-width: 600px;
     padding: 8px;
@@ -58,7 +58,7 @@
     resize: none;
 }
 
-.flex_css textarea {
+.flex_css_q textarea {
     height: 100px;
     resize: none;
 }

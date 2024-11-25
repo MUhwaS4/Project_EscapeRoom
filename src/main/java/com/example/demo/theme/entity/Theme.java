@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "THEME")
+@Table(name = "Escape_THEME")
 @Getter
 @Setter
 @ToString

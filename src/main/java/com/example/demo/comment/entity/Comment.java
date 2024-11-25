@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Table(name = "COMMENT")
+@Table(name = "Escape_COMMENT")
 @Entity
 @Getter
 @Setter

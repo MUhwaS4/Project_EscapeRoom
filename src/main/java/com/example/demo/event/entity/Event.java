@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "EVENT_LIST")
+@Table(name = "Escape_EVENT_LIST")
 @Getter
 @Setter
 @ToString

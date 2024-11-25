@@ -19,7 +19,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "common_reservationtime")
+@Table(name = "Escape_common_reservationtime")
 @Getter
 @Setter
 @ToString

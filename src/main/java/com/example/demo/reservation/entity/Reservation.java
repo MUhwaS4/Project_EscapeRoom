@@ -24,7 +24,7 @@ import lombok.ToString;
 
 
 @Entity
-@Table(name = "RESERVATION")
+@Table(name = "Escape_RESERVATION")
 @Getter
 @Setter
 @ToString

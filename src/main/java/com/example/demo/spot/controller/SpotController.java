@@ -21,7 +21,7 @@ public class SpotController {
 	public String spot(Model model) {
 		List<SpotDTO> spotList = service.getSpotList();
         model.addAttribute("spots", spotList);
-        return "/spot/spot"; 
+        return "spot/spot"; 
 	}
 
 }

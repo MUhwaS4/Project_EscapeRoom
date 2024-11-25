@@ -30,7 +30,7 @@ public class QnaController {
    
    // 게시글 목록
    @GetMapping("/list")
-   public void list(@RequestParam(defaultValue = "0", name = "page") int page,
+   public String list(@RequestParam(defaultValue = "0", name = "page") int page,
                      @RequestParam(defaultValue = "all", name = "category") String category,
                      @RequestParam(defaultValue = "", name = "keyword") String keyword,
                      Model model) {
@@ -46,6 +46,8 @@ public class QnaController {
        model.addAttribute("list", list);
        model.addAttribute("category", category);
        model.addAttribute("keyword", keyword);
+
+       return "qna/list";
        
    }
    
@@ -71,7 +73,7 @@ public class QnaController {
 
         model.addAttribute("writerName", writerName);
         
-        return "/qna/register";
+        return "qna/register";
         
     }
 
@@ -121,7 +123,7 @@ public class QnaController {
                 model.addAttribute("passwordRequired", true);
                 model.addAttribute("dto", dto);
                 model.addAttribute("page", page);
-                return "/qna/read";
+                return "qna/read";
             }
         }
 
@@ -130,7 +132,7 @@ public class QnaController {
         model.addAttribute("dto", dto);
         model.addAttribute("page", page);
         
-        return "/qna/read";
+        return "qna/read";
         
     }
 
@@ -155,7 +157,7 @@ public class QnaController {
         }
 
         model.addAttribute("dto", dto);
-        return "/qna/modify";
+        return "qna/modify";
     }
 
 

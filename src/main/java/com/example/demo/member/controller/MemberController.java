@@ -41,7 +41,7 @@ public class MemberController {
 	// 회원가입 화면 반환
 	@GetMapping("/register")
 	public String register() {
-		return "/member/register";
+		return "member/register";
 	}
 	
 	// 회원 등록 메소드
@@ -102,7 +102,7 @@ public class MemberController {
 		// 로그인한 유저 데이터 반환(=단건 조회)은 로그인 시큐리티 적용 후 확인
 		// 페이지에 들어온 유저 ID값을 그대로 파라미터에 적용할 수 있도록
 		
-		return "/member/read";
+		return "member/read";
 	}
 	
 	// 회원 목록 반환

@@ -86,7 +86,7 @@ public class ThemeController {
 		redirectAttributes.addFlashAttribute("msg", theme);
 		
 		// 목록화면으로 이동.
-		return "redirect:/theme/theme-list";
+		return "redirect:theme/theme-list";
 	}
 	
 	//테마 수정화면
@@ -121,7 +121,7 @@ public class ThemeController {
 	        // 리다이렉트 주소에 파라미터 추가 (?no=1)
 	        redirectAttributes.addAttribute("theme", dto.getTheme());
 	        // 상세화면으로 이동
-	        return "redirect:/theme/theme-list";
+	        return "redirect:theme/theme-list";
 
 	        // addFlashAttribute(): 리다이렉트할 화면에 데이터를 보내는 함수
 	        // addAttribute(): 리다이렉트 주소에 파라미터를 추가하는 함수
@@ -133,7 +133,7 @@ public class ThemeController {
 	public String remove(@RequestParam("theme") String theme) {
 		//게시물을 삭제하고 목록화면으로 이동
 		service.remove(theme);
-		return "redirect:/theme/theme-list";
+		return "redirect:theme/theme-list";
 	}
 	
 }

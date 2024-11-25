@@ -12,7 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="SPOT") //실제 테이블 이름
+@Table(name="Escape_SPOT") //실제 테이블 이름
 @Getter
 @Setter
 @ToString

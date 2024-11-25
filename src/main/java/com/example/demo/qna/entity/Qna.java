@@ -26,7 +26,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "QNA")
+@Table(name = "Escape_QNA")
 @Getter
 @Setter
 @ToString

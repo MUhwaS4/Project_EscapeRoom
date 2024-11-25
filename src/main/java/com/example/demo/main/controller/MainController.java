@@ -35,7 +35,7 @@ public class MainController {
 		List<ThemeDTO> themeList = themeService.allRead();
 		model.addAttribute("themeList", themeList);
 		
-		return "/home/main";
+		return "home/main";
 	}
 	
 	@GetMapping("/reservation")
@@ -49,7 +49,7 @@ public class MainController {
         model.addAttribute("selectedDate", date);
 
         // 예시로, 뷰 페이지로 전달 (HTML 페이지로 이동)
-        return "/reservation/list";  // reservation.html 뷰 페이지로 이동
+        return "reservation/list";  // reservation.html 뷰 페이지로 이동
     }
 	
 	// 커스텀 로그인 화면을 반환하는 메소드

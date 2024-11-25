@@ -26,7 +26,7 @@ public class ReservationController {
 	    // 테마 예약 목록 조회
 	    @GetMapping("/list")
 	    public String getReservations() {
-	        return "/reservation/list";
+	        return "reservation/list";
 	        
 	    }
 	    

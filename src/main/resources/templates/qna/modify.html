@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<th:block th:replace="~{ /layout/basic :: setContent(~{this::content})}"> <!-- 파라미터로 조각코드 받기 -->
+<th:block th:replace="~{ layout/basic :: setContent(~{this::content})}"> <!-- 파라미터로 조각코드 받기 -->
 
    <th:block th:fragment="content">
    
@@ -12,7 +12,7 @@
    <div class="container register-box">
        <form id="qnaForm" th:action="@{/qna/modify}" th:method="post" onsubmit="return validateForm()">
         
-		<div class="flex_css">
+		<div class="flex_css_q">
 		    <span class="width_box"><label for="writer">작성자</label></span>
 		    <input type="text" id="writer" name="writer" th:value="${dto.member.name}" readonly>
 		<div class="private-container">
@@ -21,18 +21,18 @@
 		</div>
 		</div>
          
-		<div class="flex_css">
+		<div class="flex_css_q">
 		    <span class="width_box"><label for="title">제목</label></span>
 		    <input type="text" id="title" name="title" th:value="${dto.title}" required>
 		</div>
       
       
-       <div class="flex_css" style="height:120px;">
+       <div class="flex_css_q" style="height:120px;">
             <span class="width_box"><label for="content">내용</label></span>
             <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
         </div>
          
-		<div class="flex_css">
+		<div class="flex_css_q">
 		    <span class="width_box"><label for="password">비밀번호</label></span>
 		    <input type="password" id="password" name="password" th:value="${dto.password}" disabled>
 		</div>
