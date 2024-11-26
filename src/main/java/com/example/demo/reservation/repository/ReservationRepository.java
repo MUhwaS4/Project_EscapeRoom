@@ -16,9 +16,6 @@ import com.example.demo.theme.entity.Theme;
 
 import jakarta.transaction.Transactional;
 
-/**
- * 
- */
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
 	/**
@@ -33,28 +30,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	
 	@Modifying
 	@Transactional
-	@Query(value = 
-			"INSERT INTO reservation " + 
-					"(" + 
-					"amount" + 
-					",people" + 
-					",reservation_date" + 
-					",reservation_time" + 
-					",member_id" + 
-					",spot_name_spot_name" + 
-					",theme_theme         " + 
-					")" + 
-					"VALUES" + 
-					"(" + 
-					":amount" + 
-					",:people" + 
-					",:reservation_date" + 
-					",:reservation_time" + 
-					",:member_id" + 
-					",:spot_name_spot_name" + 
-					",:theme_theme       " + 
-					")"
-					, nativeQuery = true)
+	@Query(value = "INSERT INTO escape_reservation (amount, people, reservation_date, reservation_time, member_id, spot_name_spot_name, theme_theme) "
+					+ "VALUES (:amount, :people, :reservation_date, :reservation_time, :member_id, :spot_name_spot_name, :theme_theme)", 
+            nativeQuery = true)
 	int insertResrvationInfo(
 							  @Param("amount") int amount
 							, @Param("people") int people
@@ -64,105 +42,50 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 							, @Param("spot_name_spot_name") String spot_name_spot_name
 							, @Param("theme_theme") String theme_theme
 							);
-	
-//	@Query(value = ""
-//	+ "SELECT R.NO as no\r\n"
-//	+ "       , M.NAME as name\r\n"
-//	+ "       , R.theme_theme as theme \r\n"
-//	+ "       , R.reservation_date as reservationDate \r\n"
-//	+ "       , R.reservation_time as reservationTime \r\n" 
-//	+ "       , R.people as people\r\n"
-//	+ "       , R.spot_name_spot_name as spot\r\n"
-//	+ "  FROM reservation R\r\n"
-//	+ "       , `member` m \r\n"
-//	+ " WHERE 1 = 1 \r\n"
-//	+ "   AND R.member_id = M.id\r\n"
-//	+ " ORDER BY R.reservation_date DESC, R.reservation_time DESC\r\n" 
-//	, nativeQuery = true)
-	@Query(value = ""
-			+ "SELECT R.NO as no\r\n"
-			+ "       , M.NAME as name\r\n"
-			+ "       , R.theme_theme as theme \r\n"
-			+ "       , R.reservation_date as reservationDate \r\n"
-			+ "       , CONCAT(SUBSTRING(R.reservation_time, 1, 2), ' : ', SUBSTRING(R.reservation_time, 3, 2)) as reservationTime \r\n"  
-			+ "       , R.people as people\r\n"
-			+ "       , R.spot_name_spot_name as spot\r\n"
-			+ "  FROM reservation R\r\n"
-			+ "       , `member` m \r\n"
-			+ " WHERE 1 = 1 \r\n"
-			+ "   AND R.member_id = M.id\r\n"
-			+ " ORDER BY R.NO DESC\r\n"
-			, nativeQuery = true)
+
+	@Query(value = "SELECT R.NO as no, M.NAME as name, R.theme_theme as theme, R.reservation_date as reservationDate, "
+					+ "CONCAT(SUBSTRING(R.reservation_time, 1, 2), ' : ', SUBSTRING(R.reservation_time, 3, 2)) as reservationTime, "
+					+ "R.people as people, R.spot_name_spot_name as spot "
+					+ "FROM escape_reservation R, escape_member M "
+					+ "WHERE R.member_id = M.id "
+					+ "ORDER BY R.NO DESC", nativeQuery = true)
 	List<Map<String, String>> getReservationInventoryList();
 
-	/*
-	 * // 회원 id 랜덤 적용 이후 삭제 해야됨
-	 * 
-	 * @Query(value = "SELECT * FROM member ORDER BY RAND() LIMIT 1", nativeQuery =
-	 * true) Member findRandomMember();
-	 */
-	
-	
-	@Query(value = ""
-	+ "SELECT spot_name\r\n"
-	+ "  FROM bootex.spot"
-	, nativeQuery = true)
+	@Query(value = "SELECT spot_name FROM bootex.escape_spot", nativeQuery = true)
 	List<Map<String, String>> getSpotList();
 	
-	
-	// 수정 후
-	// 더미 데이터 중복 벙자용 부분 추가
+	// 더미 데이터 중복 방지용 부분 추가
 	boolean existsByMemberAndThemeAndSpotName(Member member, Theme theme, Spot spot);
-	
-	
-	
-	
-	
-	
-	
-	
-	 @Query(value = ""
-	            + "SELECT R.NO as no\r\n"
-	            + "       , M.NAME as name\r\n"
-	            + "       , R.theme_theme as theme \r\n"
-	            + "       , R.reservation_date as reservationDate \r\n"
-	            + "       , CONCAT(SUBSTRING(R.reservation_time, 1, 2), ' : ', SUBSTRING(R.reservation_time, 3, 2)) as reservationTime \r\n"  
-	            + "       , R.people as people\r\n"
-	            + "       , R.spot_name_spot_name as spot\r\n"
-	            + "  FROM reservation R\r\n"
-	            + "       , `member` M \r\n"
-	            + " WHERE 1 = 1 \r\n"
-	            + "   AND R.member_id = M.id\r\n"
-	            + "   AND R.spot_name_spot_name = :spot \r\n"  // 지점별 필터링 추가
-	            + " ORDER BY R.NO DESC\r\n"
-	            , nativeQuery = true)
+		
+	@Query(value = "SELECT R.NO AS no, "
+					+ "M.NAME AS name, "
+					+ "R.theme_theme AS theme, "
+					+ "R.reservation_date AS reservationDate, "
+					+ "CONCAT(SUBSTRING(R.reservation_time, 1, 2), ' : ', SUBSTRING(R.reservation_time, 3, 2)) AS reservationTime, "
+					+ "R.people AS people, "
+					+ "R.spot_name_spot_name AS spot "
+					+ "FROM escape_reservation R "
+					+ "JOIN `member` M ON R.member_id = M.id "
+					+ "WHERE R.spot_name_spot_name = :spot " // 지점별 필터링
+					+ "ORDER BY R.NO DESC",
+					nativeQuery = true)
 	    List<Map<String, String>> findReservationsBySpot(@Param("spot") String spot);
-
-	// 수정 끝 
 	
-	
-	
-	
-	
-	@Query(value = ""
-	+ "SELECT theme, genre, `level`, limited_time, lock_ratio, max_people, min_people, plant_ratio, sysnopsis, spot_spot_name, img_path as imgPath\r\n"
-	+ "  FROM bootex.theme\r\n"
-	+ " WHERE 1 = 1 \r\n"
-	+ "   AND spot_spot_name = :spot"
-			
-	, nativeQuery = true)
+	@Query(value = "SELECT theme, genre, `level`, limited_time, lock_ratio, max_people, "
+					+ "min_people, plant_ratio, sysnopsis, spot_spot_name, img_path AS imgPath "
+			 		+ "FROM bootex.escape_theme "
+			 		+ " WHERE spot_spot_name = :spot",
+			 		nativeQuery = true)
 	List<Map<String, String>> getThemeList(@Param("spot") String spot);
 
 	/**
 	 * @param theme
 	 */
-	@Query(value = ""
-	+ "SELECT reservation_time as reservationTime\r\n"
-	+ "       , use_yn as useYn"
-	+ "  FROM common_reservationtime\r\n"
-	+ " WHERE 1 = 1 \r\n"
-	+ "   AND theme = :theme"
-	, nativeQuery = true)
+	@Query(value = "SELECT reservation_time AS reservationTime, use_yn AS useYn "
+					+ "FROM escape_common_reservationtime "
+					+ "WHERE theme = :theme",
+					nativeQuery = true)
+
 	List<Map<String, String>> getThemeReservationTime(@Param("theme") String theme);
 
 	/**
@@ -171,27 +94,22 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param reservationTime
 	 * @param reservationTime 
 	 */
-	@Query(value = ""
-	+ "SELECT count(1)\r\n"
-	+ "  FROM bootex.reservation\r\n"
-	+ " WHERE 1 = 1 \r\n"
-	+ "   AND spot_name_spot_name = :spot\r\n"
-	+ "   AND theme_theme = :theme\r\n"
-	+ "   AND reservation_date  = :reservationDate\r\n"
-	+ "   AND reservation_time  = :reservationTime"
-	, nativeQuery = true)
+	@Query(value = "SELECT COUNT(1) "
+					+ "FROM bootex.escape_reservation "
+					+ "WHERE spot_name_spot_name = :spot "
+					+ " AND theme_theme = :theme "
+					+ " AND reservation_date = :reservationDate "
+					+ " AND reservation_time = :reservationTime", 
+					nativeQuery = true)
 	int getReservationAvailable(@Param("spot") 			String spot
 								,@Param("theme") 			String theme
 								,@Param("reservationDate") 	String reservationDate
 								,@Param("reservationTime") 	String reservationTime);
 		
-	
-	
-	
 	/**
 	 * @name: 서연
 	 * @day : 10.23
-	 * @param : 회원아이로 예약조회
+	 * @param : 회원 아이디로 예약 조회
 	 */
 	List<Reservation> findByMember(Member member);
 
